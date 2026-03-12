@@ -1,0 +1,740 @@
+<!-- App body starts -->
+<div class="app-body">
+  <!-- Row starts -->
+  <div class="row gx-4">
+    <div class="col-sm-12">
+      <div class="card">
+        <!--<div class="card-header">-->
+        <h5 class="card-header border-bottom">Member Details</h5>
+        <!--</div>-->
+        <div class="card-body">
+          <!-- Row starts -->
+          <div class="row gx-4">
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1"
+                  >Member No. <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="memberNumber"
+                  name="memberNumber"
+                  [(ngModel)]="memberDetails.memberNumber"
+                  placeholder="Enter Member No."
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1"
+                  >Full Name <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fullName"
+                  name="fullName"
+                  [(ngModel)]="memberDetails.fullName"
+                  placeholder="Enter Full Name"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a2">Email <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="emailAddress"
+                  name="emailAddress"
+                  [(ngModel)="memberDetails.emailAddress"]
+                  placeholder="Enter Email"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a3"
+                  >Mobile Number<span class="text-danger">*</span></label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  id="mobileNumber"
+                  name="mobileNumber"
+                  [(ngModel)]="memberDetails.mobileNumber"
+                  placeholder="Enter Mobile Number"
+                />
+              </div>
+            </div>
+
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a4"
+                  >Date of Birth <span class="text-danger">*</span></label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="dateOfBirth"
+                  name="dateOfBirth"
+                  [(ngModel)]="memberDetails.dateOfBirth"
+                  placeholder="Enter DOB"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Inquiry Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="inquiryDate"
+                  name="inquiryDate"
+                  [(ngModel)]="memberDetails.inquiryDate"
+                  placeholder="Enter DOB"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a6">Occupation</label>
+                <select
+                  class="form-select"
+                  id="occupation"
+                  name="occupation"
+                  [(ngModel)]="memberDetails.occupation"
+                >
+                  <option value="0">Select</option>
+                  <option value="1">Developer</option>
+                  <option value="2">Designer</option>
+                  <option value="3">Teacher</option>
+                  <option value="4">Doctor</option>
+                  <option value="5">Business</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a6">Package Type</label>
+                <select
+                  class="form-select"
+                  id="packageType"
+                  name="packageType"
+                  [(ngModel)]="memberDetails.packageType"
+                >
+                  <option value="0">Select</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Join Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="joinDate"
+                  name="joinDate"
+                  [(ngModel)]="memberDetails.joinDate"
+                  placeholder="Enter Join Date"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">due Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="dueDate"
+                  name="dueDate"
+                  [(ngModel)]="memberDetails.dueDate"
+                  placeholder="Enter Due Date"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Remarks</label>
+                <input
+                  type="remarks"
+                  class="form-control"
+                  id="remarks"
+                  name="remarks"
+                  [(ngModel)]="memberDetails.remarks"
+                  placeholder="Enter Remarks"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="selectGender1"
+                  >Gender <span class="text-danger">*</span></label
+                >
+                <div class="m-0">
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="selectGenderOptions"
+                      id="gender"
+                      name="gender"
+                      [(ngModel)]="memberDetails.gender"
+                      value="male"
+                    />
+                    <label class="form-check-label" for="selectGender1">Male</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="selectGenderOptions"
+                      id="selectGender2"
+                      value="female"
+                    />
+                    <label class="form-check-label" for="selectGender2">Female</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Period</label>
+                <select
+                  class="form-select"
+                  id="period"
+                  name="period"
+                  [(ngModel)]="memberDetails.period"
+                >
+                  <option value="0">Select</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Personal Trainer</label>
+                <select
+                  class="form-select"
+                  id="personalTrainer"
+                  name="personalTrainer"
+                  [(ngModel)]="memberDetails.personalTrainer"
+                >
+                  <option value="0">Select</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">PT Amount</label>
+                <input
+                  type="remarks"
+                  class="form-control"
+                  id="ptAmount"
+                  name="ptAmount"
+                  [(ngModel)]="memberDetails.ptAmount"
+                  placeholder="Enter PT Amount"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Age</label>
+                <input
+                  type="remarks"
+                  class="form-control"
+                  id="age"
+                  name="age"
+                  [(ngModel)]="memberDetails.age"
+                  placeholder="Enter Age"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Marital Status</label>
+                <select
+                  class="form-select"
+                  id="maritalStatus"
+                  name="maritalStatus"
+                  [(ngModel)="memberDetails.maritalStatus"]
+                >
+                  <option value="0">Select</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Address</label>
+                <input
+                  type="remarks"
+                  class="form-control"
+                  id="address"
+                  name="address"
+                  [(ngModel)]="memberDetails.address"
+                  placeholder="Enter Address"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Shift Type</label>
+                <select
+                  class="form-select"
+                  id="shiftType"
+                  name="shiftType"
+                  [(ngModel)]="memberDetails.shiftType"
+                >
+                  <option value="0">Select</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Time</label>
+                <select class="form-select" id="time" name="time" [(ngModel)]="memberDetails.time">
+                  <option value="0">Select</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Join Weight</label>
+                <input
+                  type="remarks"
+                  class="form-control"
+                  id="joinWeight"
+                  name="joinWeight"
+                  [(ngModel)]="memberDetails.joinWeight"
+                  placeholder="Enter Join Weight"
+                />
+              </div>
+            </div>
+
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Paid Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="paidDate"
+                  name="paidDate"
+                  [(ngModel)]="memberDetails.paidDate"
+                  placeholder="Enter Paid Date"
+                />
+              </div>
+            </div>
+
+            <!-- Row ends -->
+          </div>
+        </div>
+        <div class="card-footer border-top">
+          <div class="col-sm-12">
+            <div class="d-flex gap-2 justify-content-end">
+              <button type="button" class="btn btn-outline-secondary">Cancel</button>
+              <button type="button" class="btn btn-primary" (click)="printData()">
+                Save / Print
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-2">
+        <h5 class="card-header border-bottom">Package Details</h5>
+        <div class="card-body">
+          <div class="row gx-4">
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a6">Package Selection</label>
+                <select
+                  class="form-select"
+                  id="packageName"
+                  name="packageName"
+                  [(ngModel)]="memberDetails.packageName"
+                >
+                  <option value="0">Select</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1">Period <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="period"
+                  name="period"
+                  [(ngModel)]="memberDetails.period"
+                  placeholder="Enter Period"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1"
+                  >Start Date<span class="text-danger">*</span></label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="startDate"
+                  name="startDate"
+                  [(ngModel)]="memberDetails.startDate"
+                  placeholder="Enter Start Date"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1"
+                  >End Date<span class="text-danger">*</span></label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="endDate"
+                  name="endDate"
+                  [(ngModel)]="memberDetails.endDate"
+                  placeholder="Enter End Date"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1">Amount<span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="amount"
+                  name="amount"
+                  [(ngModel)]="memberDetails.amount"
+                  placeholder="Enter Amount"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer border-top">
+          <div class="col-sm-12">
+            <div class="d-flex gap-2 justify-content-end">
+              <button type="button" class="btn btn-outline-secondary">Cancel</button>
+              <button type="button" class="btn btn-primary">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row gx-4">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title">Package List</h5>
+              </div>
+              <div class="card-body">
+                <!-- Table starts -->
+                <div class="table-responsive">
+                  <table id="basicExample" class="table m-0 align-middle">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>DOJ</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>001</td>
+                        <td>
+                          <img
+                            src="assets/images/user.png"
+                            class="img-shadow img-2x rounded-5 me-1"
+                            alt="Fitness Dashboard"
+                          />
+                          Willian Mathews
+                        </td>
+                        <td>23</td>
+                        <td>Male</td>
+                        <td>0987654321</td>
+                        <td>test@testing.com</td>
+                        <td>20/04/2024</td>
+                        <td>
+                          <div class="d-inline-flex gap-1">
+                            <button
+                              class="btn btn-outline-danger btn-sm"
+                              data-bs-toggle="modal"
+                              data-bs-target="#delRow"
+                            >
+                              <i class="ri-delete-bin-line"></i>
+                            </button>
+                            <a
+                              href="edit-member.html"
+                              class="btn btn-outline-success btn-sm"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              data-bs-title="Edit Gym Member"
+                            >
+                              <i class="ri-edit-box-line"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>002</td>
+                        <td>
+                          <img
+                            src="assets/images/user1.png"
+                            class="img-shadow img-2x rounded-5 me-1"
+                            alt="Fitness Dashboard"
+                          />
+                          Adam Bradley
+                        </td>
+                        <td>28</td>
+                        <td>Female</td>
+                        <td>0987654321</td>
+                        <td>test@testing.com</td>
+                        <td>12/03/2024</td>
+                        <td>
+                          <div class="d-inline-flex gap-1">
+                            <button
+                              class="btn btn-outline-danger btn-sm"
+                              data-bs-toggle="modal"
+                              data-bs-target="#delRow"
+                            >
+                              <i class="ri-delete-bin-line"></i>
+                            </button>
+                            <a
+                              href="edit-member.html"
+                              class="btn btn-outline-success btn-sm"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              data-bs-title="Edit Gym Member"
+                            >
+                              <i class="ri-edit-box-line"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>003</td>
+                        <td>
+                          <img
+                            src="assets/images/user2.png"
+                            class="img-shadow img-2x rounded-5 me-1"
+                            alt="Fitness Dashboard"
+                          />
+                          Merle Daniel
+                        </td>
+                        <td>19</td>
+                        <td>Male</td>
+                        <td>0987654321</td>
+                        <td>test@testing.com</td>
+                        <td>03/06/2024</td>
+                        <td>
+                          <div class="d-inline-flex gap-1">
+                            <button
+                              class="btn btn-outline-danger btn-sm"
+                              data-bs-toggle="modal"
+                              data-bs-target="#delRow"
+                            >
+                              <i class="ri-delete-bin-line"></i>
+                            </button>
+                            <a
+                              href="edit-member.html"
+                              class="btn btn-outline-success btn-sm"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              data-bs-title="Edit Gym Member"
+                            >
+                              <i class="ri-edit-box-line"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>004</td>
+                        <td>
+                          <img
+                            src="assets/images/user3.png"
+                            class="img-shadow img-2x rounded-5 me-1"
+                            alt="Fitness Dashboard"
+                          />
+                          Nicole Sellers
+                        </td>
+                        <td>36</td>
+                        <td>Male</td>
+                        <td>0987654321</td>
+                        <td>test@testing.com</td>
+                        <td>18/3/2023</td>
+                        <td>
+                          <div class="d-inline-flex gap-1">
+                            <button
+                              class="btn btn-outline-danger btn-sm"
+                              data-bs-toggle="modal"
+                              data-bs-target="#delRow"
+                            >
+                              <i class="ri-delete-bin-line"></i>
+                            </button>
+                            <a
+                              href="edit-member.html"
+                              class="btn btn-outline-success btn-sm"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              data-bs-title="Edit Gym Member"
+                            >
+                              <i class="ri-edit-box-line"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>005</td>
+                        <td>
+                          <img
+                            src="assets/images/user4.png"
+                            class="img-shadow img-2x rounded-5 me-1"
+                            alt="Fitness Dashboard"
+                          />
+                          Kathy Atkinson
+                        </td>
+                        <td>34</td>
+                        <td>Male</td>
+                        <td>0987654321</td>
+                        <td>test@testing.com</td>
+                        <td>23/10/2023</td>
+                        <td>
+                          <div class="d-inline-flex gap-1">
+                            <button
+                              class="btn btn-outline-danger btn-sm"
+                              data-bs-toggle="modal"
+                              data-bs-target="#delRow"
+                            >
+                              <i class="ri-delete-bin-line"></i>
+                            </button>
+                            <a
+                              href="edit-member.html"
+                              class="btn btn-outline-success btn-sm"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              data-bs-title="Edit Gym Member"
+                            >
+                              <i class="ri-edit-box-line"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- Table ends -->
+
+                <!-- Modal Delete Row -->
+                <div
+                  class="modal fade"
+                  id="delRow"
+                  tabindex="-1"
+                  aria-labelledby="delRowLabel"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="delRowLabel">Confirm</h5>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body">Are you sure you want to delete the gym member?</div>
+                      <div class="modal-footer">
+                        <div class="d-flex justify-content-end gap-2">
+                          <button
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                          >
+                            No
+                          </button>
+                          <button class="btn btn-danger">Yes</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-2">
+        <h5 class="card-header border-bottom">PT Details</h5>
+        <div class="card-body">
+          <div class="row gx-4">
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1">PT Name<span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ptName"
+                  name="ptName"
+                  [(ngModel)]="memberDetails.ptName"
+                  placeholder="Enter PT Name"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1"
+                  >PT Period<span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ptPeriod"
+                  name="ptPeriod"
+                  [(ngModel)]="memberDetails.ptPeriod"
+                  placeholder="Enter PT Period"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1">Amount<span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="amount"
+                  name="amount"
+                  [(ngModel)]="memberDetails.amount"
+                  placeholder="Enter Amount"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer border-top">
+          <div class="col-sm-12">
+            <div class="d-flex gap-2 justify-content-end">
+              <button type="button" class="btn btn-outline-secondary">Cancel</button>
+              <button type="button" class="btn btn-primary">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Row ends -->
+</div>
+<!-- App body ends -->

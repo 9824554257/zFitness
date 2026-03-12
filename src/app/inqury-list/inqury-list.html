@@ -1,0 +1,265 @@
+<!-- App body starts -->
+<div class="app-body">
+  <!-- Row starts -->
+  <div class="row gx-4">
+    <div class="col-sm-12">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title">Inquiry</h5>
+        </div>
+        <div class="card-body">
+          <div class="chart-height-lg" id="members"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Row ends -->
+
+  <!-- Row starts -->
+  <div class="row gx-4">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <h5 class="card-title">Members List</h5>
+          <a routerLink="/newInquiry" class="btn btn-primary ms-auto">Add New Inquiry</a>
+        </div>
+        <div class="card-body">
+          <!-- Table starts -->
+          <div class="table-responsive">
+            <table id="basicExample" class="table m-0 align-middle">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                  <th>Contact</th>
+                  <th>Email</th>
+                  <th>DOJ</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>001</td>
+                  <td>
+                    <img
+                      src="../../../assets/images/user.png"
+                      class="img-shadow img-2x rounded-5 me-1"
+                      alt="Fitness Dashboard"
+                    />
+                    Willian Mathews
+                  </td>
+                  <td>23</td>
+                  <td>Male</td>
+                  <td>0987654321</td>
+                  <td>test@testing.com</td>
+                  <td>20/04/2024</td>
+                  <td>
+                    <div class="d-inline-flex gap-1">
+                      <button
+                        class="btn btn-outline-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delRow"
+                      >
+                        <i class="ri-delete-bin-line"></i>
+                      </button>
+                      <a
+                        href="edit-member.html"
+                        class="btn btn-outline-success btn-sm"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="Edit Gym Member"
+                      >
+                        <i class="ri-edit-box-line"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>002</td>
+                  <td>
+                    <img
+                      src="../../../assets/images/user1.png"
+                      class="img-shadow img-2x rounded-5 me-1"
+                      alt="Fitness Dashboard"
+                    />
+                    Adam Bradley
+                  </td>
+                  <td>28</td>
+                  <td>Female</td>
+                  <td>0987654321</td>
+                  <td>test@testing.com</td>
+                  <td>12/03/2024</td>
+                  <td>
+                    <div class="d-inline-flex gap-1">
+                      <button
+                        class="btn btn-outline-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delRow"
+                      >
+                        <i class="ri-delete-bin-line"></i>
+                      </button>
+                      <a
+                        href="edit-member.html"
+                        class="btn btn-outline-success btn-sm"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="Edit Gym Member"
+                      >
+                        <i class="ri-edit-box-line"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>003</td>
+                  <td>
+                    <img
+                      src="../../../assets/images/user2.png"
+                      class="img-shadow img-2x rounded-5 me-1"
+                      alt="Fitness Dashboard"
+                    />
+                    Merle Daniel
+                  </td>
+                  <td>19</td>
+                  <td>Male</td>
+                  <td>0987654321</td>
+                  <td>test@testing.com</td>
+                  <td>03/06/2024</td>
+                  <td>
+                    <div class="d-inline-flex gap-1">
+                      <button
+                        class="btn btn-outline-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delRow"
+                      >
+                        <i class="ri-delete-bin-line"></i>
+                      </button>
+                      <a
+                        href="edit-member.html"
+                        class="btn btn-outline-success btn-sm"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="Edit Gym Member"
+                      >
+                        <i class="ri-edit-box-line"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>004</td>
+                  <td>
+                    <img
+                      src="../../../assets/images/user3.png"
+                      class="img-shadow img-2x rounded-5 me-1"
+                      alt="Fitness Dashboard"
+                    />
+                    Nicole Sellers
+                  </td>
+                  <td>36</td>
+                  <td>Male</td>
+                  <td>0987654321</td>
+                  <td>test@testing.com</td>
+                  <td>18/3/2023</td>
+                  <td>
+                    <div class="d-inline-flex gap-1">
+                      <button
+                        class="btn btn-outline-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delRow"
+                      >
+                        <i class="ri-delete-bin-line"></i>
+                      </button>
+                      <a
+                        href="edit-member.html"
+                        class="btn btn-outline-success btn-sm"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="Edit Gym Member"
+                      >
+                        <i class="ri-edit-box-line"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>005</td>
+                  <td>
+                    <img
+                      src="../../../assets/images/user4.png"
+                      class="img-shadow img-2x rounded-5 me-1"
+                      alt="Fitness Dashboard"
+                    />
+                    Kathy Atkinson
+                  </td>
+                  <td>34</td>
+                  <td>Male</td>
+                  <td>0987654321</td>
+                  <td>test@testing.com</td>
+                  <td>23/10/2023</td>
+                  <td>
+                    <div class="d-inline-flex gap-1">
+                      <button
+                        class="btn btn-outline-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delRow"
+                      >
+                        <i class="ri-delete-bin-line"></i>
+                      </button>
+                      <a
+                        href="edit-member.html"
+                        class="btn btn-outline-success btn-sm"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="Edit Gym Member"
+                      >
+                        <i class="ri-edit-box-line"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Table ends -->
+
+          <!-- Modal Delete Row -->
+          <div
+            class="modal fade"
+            id="delRow"
+            tabindex="-1"
+            aria-labelledby="delRowLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-sm">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="delRowLabel">Confirm</h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">Are you sure you want to delete the gym member?</div>
+                <div class="modal-footer">
+                  <div class="d-flex justify-content-end gap-2">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+                      No
+                    </button>
+                    <button class="btn btn-danger">Yes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Row ends -->
+</div>
+<!-- App body ends -->
