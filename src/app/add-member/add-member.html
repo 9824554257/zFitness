@@ -48,7 +48,7 @@
                   class="form-control"
                   id="emailAddress"
                   name="emailAddress"
-                  [(ngModel)="memberDetails.emailAddress"]
+                  [(ngModel)]="memberDetails.emailAddress"
                   placeholder="Enter Email"
                 />
               </div>
@@ -122,7 +122,7 @@
                   class="form-select"
                   id="packageType"
                   name="packageType"
-                  [(ngModel)]="memberDetails.packageType"
+                  [(ngModel)]="memberDetails.packageDetails.packageName"
                 >
                   <option value="0">Select</option>
                 </select>
@@ -259,7 +259,7 @@
                   class="form-select"
                   id="maritalStatus"
                   name="maritalStatus"
-                  [(ngModel)="memberDetails.maritalStatus"]
+                  [(ngModel)]="memberDetails.maritalStatus"
                 >
                   <option value="0">Select</option>
                 </select>
@@ -350,12 +350,12 @@
           <div class="row gx-4">
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a6">Package Selection</label>
+                <label class="form-label" for="a6">Package Name</label>
                 <select
                   class="form-select"
                   id="packageName"
                   name="packageName"
-                  [(ngModel)]="memberDetails.packageName"
+                  [(ngModel)]="memberDetails.packageDetails.packageName"
                 >
                   <option value="0">Select</option>
                 </select>
@@ -369,7 +369,7 @@
                   class="form-control"
                   id="period"
                   name="period"
-                  [(ngModel)]="memberDetails.period"
+                  [(ngModel)]="memberDetails.packageDetails.period"
                   placeholder="Enter Period"
                 />
               </div>
@@ -384,7 +384,7 @@
                   class="form-control"
                   id="startDate"
                   name="startDate"
-                  [(ngModel)]="memberDetails.startDate"
+                  [(ngModel)]="memberDetails.packageDetails.startDate"
                   placeholder="Enter Start Date"
                 />
               </div>
@@ -399,7 +399,7 @@
                   class="form-control"
                   id="endDate"
                   name="endDate"
-                  [(ngModel)]="memberDetails.endDate"
+                  [(ngModel)]="memberDetails.packageDetails.endDate"
                   placeholder="Enter End Date"
                 />
               </div>
@@ -412,7 +412,7 @@
                   class="form-control"
                   id="amount"
                   name="amount"
-                  [(ngModel)]="memberDetails.amount"
+                  [(ngModel)]="memberDetails.packageDetails.amount"
                   placeholder="Enter Amount"
                 />
               </div>
@@ -689,7 +689,7 @@
                   class="form-control"
                   id="ptName"
                   name="ptName"
-                  [(ngModel)]="memberDetails.ptName"
+                  [(ngModel)]="memberDetails.ptDetails.ptName"
                   placeholder="Enter PT Name"
                 />
               </div>
@@ -704,7 +704,7 @@
                   class="form-control"
                   id="ptPeriod"
                   name="ptPeriod"
-                  [(ngModel)]="memberDetails.ptPeriod"
+                  [(ngModel)]="memberDetails.ptDetails.ptPeriod"
                   placeholder="Enter PT Period"
                 />
               </div>
@@ -717,7 +717,7 @@
                   class="form-control"
                   id="amount"
                   name="amount"
-                  [(ngModel)]="memberDetails.amount"
+                  [(ngModel)]="memberDetails.ptDetails.amount"
                   placeholder="Enter Amount"
                 />
               </div>
