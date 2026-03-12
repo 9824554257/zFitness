@@ -16,33 +16,29 @@ export class Login implements OnInit {
     public http: HttpClient,
     public router: Router,
   ) {}
-  emailID: any = 'a@a.com';
-  password: any = '123456';
+  emailID: any;
+  password: any;
   ngOnInit(): void {
-    this.login();
+    // this.login();
   }
 
   login() {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      Accept: '*/*',
-      'Accept-Encoding': 'gzip, deflate, br',
-      Connection: 'keep-alive',
-      'User-Agent': 'EchoapiRuntime/1.1.0',
     });
 
     const httpOptions = {
       headers: headers,
     };
-    let reqLogin = { email: 'admin@g.com', password: '123456' };
+    let reqLogin = { email: this.emailID, password: this.password };
     this.http
       .post('https://gym-five-blush.vercel.app/users/login', reqLogin, httpOptions)
       .subscribe(
         (data) => {
-          console.log(data);
+          this.router.navigate(['/newMemberList']);
         },
         (error) => {
-          console.log(error);
+          alert('Invalid Credentials!!');
         },
       );
   }
