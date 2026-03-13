@@ -34,7 +34,13 @@ export class Login implements OnInit {
     this.http
       .post('https://gym-five-blush.vercel.app/users/login', reqLogin, httpOptions)
       .subscribe(
-        (data) => {
+        (data :any) => {
+          if(data.token) {
+            sessionStorage.setItem('token', data.token);
+          }
+          if(data.refreshToken) {
+            sessionStorage.setItem('refreshToken', data.refreshToken);
+          }
           this.router.navigate(['/newMemberList']);
         },
         (error) => {
