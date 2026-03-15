@@ -86,19 +86,6 @@
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Inquiry Date</label>
-                <input
-                  type="date"
-                  class="form-control"
-                  id="inquiryDate"
-                  name="inquiryDate"
-                  [(ngModel)]="memberDetails.inquiryDate"
-                  placeholder="Enter DOB"
-                />
-              </div>
-            </div>
-            <div class="col-xxl-3 col-lg-4 col-sm-6">
-              <div class="mb-3">
                 <label class="form-label" for="a6">Occupation</label>
                 <select
                   class="form-select"
@@ -157,7 +144,7 @@
                       id="gender"
                       name="gender"
                       [(ngModel)]="memberDetails.gender"
-                      value="male"
+                      value="Male"
                     />
                     <label class="form-check-label" for="selectGender1">Male</label>
                   </div>
@@ -167,7 +154,7 @@
                       type="radio"
                       name="selectGenderOptions"
                       id="selectGender2"
-                      value="female"
+                      value="Female"
                     />
                     <label class="form-check-label" for="selectGender2">Female</label>
                   </div>
@@ -230,15 +217,6 @@
 
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Time</label>
-                <select class="form-select" id="time" name="time" [(ngModel)]="memberDetails.time">
-                  <option value="0">Select</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="col-xxl-3 col-lg-4 col-sm-6">
-              <div class="mb-3">
                 <label class="form-label" for="a5">Join Weight</label>
                 <input
                   type="remarks"
@@ -264,6 +242,82 @@
                 />
               </div>
             </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a6">Package Name</label>
+                <select
+                  class="form-select"
+                  id="packageName"
+                  name="packageName"
+                  [(ngModel)]="memberDetails.packageName"
+                  (ngModelChange)="updatePackageDetails()"
+                >
+                  
+                  @for(singlePackage of sharedService.masterPackageDetailsList; track singlePackage._id) {
+                    <option [value]="singlePackage._id" [id]="singlePackage._id">{{singlePackage.packageName}}</option>
+                  } @empty {
+                    <option value="0">No packages Available</option>
+                  }
+                </select>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1">Package Period <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="period"
+                  name="period"
+                  [(ngModel)]="memberDetails.period"
+                  placeholder="Enter Period"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1"
+                  >Package Start Date<span class="text-danger">*</span></label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="startDate"
+                  name="startDate"
+                  [(ngModel)]="memberDetails.packageDetails.startDate"
+                  placeholder="Enter Start Date"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1"
+                  >Package End Date<span class="text-danger">*</span></label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="endDate"
+                  name="endDate"
+                  [(ngModel)]="memberDetails.packageDetails.endDate"
+                  placeholder="Enter End Date"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1">Package Amount<span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="amount"
+                  name="amount"
+                  [(ngModel)]="memberDetails.amount"
+                  placeholder="Enter Amount"
+                />
+              </div>
+            </div>
+            
 
             <!-- Row ends -->
           </div>
@@ -272,7 +326,7 @@
           <div class="col-sm-12">
             <div class="d-flex gap-2 justify-content-end">
               <button type="button" class="btn btn-outline-secondary">Cancel</button>
-              <button type="button" class="btn btn-primary" (click)="printData()">
+              <button type="button" class="btn btn-primary" (click)="savememberDetails()">
                 Save / Print
               </button>
             </div>
