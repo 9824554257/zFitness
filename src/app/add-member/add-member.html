@@ -119,19 +119,6 @@
 
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Remarks</label>
-                <input
-                  type="remarks"
-                  class="form-control"
-                  id="remarks"
-                  name="remarks"
-                  [(ngModel)]="memberDetails.remarks"
-                  placeholder="Enter Remarks"
-                />
-              </div>
-            </div>
-            <div class="col-xxl-3 col-lg-4 col-sm-6">
-              <div class="mb-3">
                 <label class="form-label" for="selectGender1"
                   >Gender <span class="text-danger">*</span></label
                 >
@@ -227,97 +214,7 @@
                   placeholder="Enter Join Weight"
                 />
               </div>
-            </div>
-
-            <div class="col-xxl-3 col-lg-4 col-sm-6">
-              <div class="mb-3">
-                <label class="form-label" for="a5">Paid Date</label>
-                <input
-                  type="date"
-                  class="form-control"
-                  id="paidDate"
-                  name="paidDate"
-                  [(ngModel)]="memberDetails.paidDate"
-                  placeholder="Enter Paid Date"
-                />
-              </div>
-            </div>
-            <div class="col-xxl-3 col-lg-4 col-sm-6">
-              <div class="mb-3">
-                <label class="form-label" for="a6">Package Name</label>
-                <select
-                  class="form-select"
-                  id="packageName"
-                  name="packageName"
-                  [(ngModel)]="memberDetails.packageName"
-                  (ngModelChange)="updatePackageDetails()"
-                >
-                  
-                  @for(singlePackage of sharedService.masterPackageDetailsList(); track singlePackage._id) {
-                    <option [value]="singlePackage._id" [id]="singlePackage._id">{{singlePackage.packageName}}</option>
-                  } @empty {
-                    <option value="0">No packages Available</option>
-                  }
-                </select>
-              </div>
-            </div>
-            <div class="col-xxl-3 col-lg-4 col-sm-6">
-              <div class="mb-3">
-                <label class="form-label" for="a1">Package Period <span class="text-danger">*</span></label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="period"
-                  name="period"
-                  [(ngModel)]="memberDetails.period"
-                  placeholder="Enter Period"
-                />
-              </div>
-            </div>
-            <div class="col-xxl-3 col-lg-4 col-sm-6">
-              <div class="mb-3">
-                <label class="form-label" for="a1"
-                  >Package Start Date<span class="text-danger">*</span></label
-                >
-                <input
-                  type="date"
-                  class="form-control"
-                  id="startDate"
-                  name="startDate"
-                  [(ngModel)]="memberDetails.packageDetails.startDate"
-                  placeholder="Enter Start Date"
-                />
-              </div>
-            </div>
-            <div class="col-xxl-3 col-lg-4 col-sm-6">
-              <div class="mb-3">
-                <label class="form-label" for="a1"
-                  >Package End Date<span class="text-danger">*</span></label
-                >
-                <input
-                  type="date"
-                  class="form-control"
-                  id="endDate"
-                  name="endDate"
-                  [(ngModel)]="memberDetails.packageDetails.endDate"
-                  placeholder="Enter End Date"
-                />
-              </div>
-            </div>
-            <div class="col-xxl-3 col-lg-4 col-sm-6">
-              <div class="mb-3">
-                <label class="form-label" for="a1">Package Amount<span class="text-danger">*</span></label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="amount"
-                  name="amount"
-                  [(ngModel)]="memberDetails.amount"
-                  placeholder="Enter Amount"
-                />
-              </div>
-            </div>
-            
+            </div>  
 
             <!-- Row ends -->
           </div>
@@ -345,25 +242,32 @@
                   class="form-select"
                   id="packageName"
                   name="packageName"
-                  [(ngModel)]="memberDetails.packageDetails.packageName"
+                  [(ngModel)]="memberDetails.packageName"
+                  (ngModelChange)="updatePackageDetails()"
                 >
-                  <option value="0">Select</option>
+                  
+                  @for(singlePackage of sharedService.masterPackageDetailsList(); track singlePackage._id) {
+                    <option [value]="singlePackage._id" [id]="singlePackage._id">{{singlePackage.packageName}}</option>
+                  } @empty {
+                    <option value="0">No packages Available</option>
+                  }
                 </select>
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a1">Period <span class="text-danger">*</span></label>
+                <label class="form-label" for="a1"> Period <span class="text-danger">*</span></label>
                 <input
                   type="text"
                   class="form-control"
                   id="period"
                   name="period"
-                  [(ngModel)]="memberDetails.packageDetails.period"
+                  [(ngModel)]="memberDetails.period"
                   placeholder="Enter Period"
                 />
               </div>
             </div>
+            
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a1"
@@ -374,7 +278,7 @@
                   class="form-control"
                   id="startDate"
                   name="startDate"
-                  [(ngModel)]="memberDetails.packageDetails.startDate"
+                  [(ngModel)]="memberDetails.startDate"
                   placeholder="Enter Start Date"
                 />
               </div>
@@ -402,8 +306,21 @@
                   class="form-control"
                   id="amount"
                   name="amount"
-                  [(ngModel)]="memberDetails.packageDetails.amount"
+                  [(ngModel)]="memberDetails.amount"
                   placeholder="Enter Amount"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Remarks</label>
+                <input
+                  type="remarks"
+                  class="form-control"
+                  id="remarks"
+                  name="remarks"
+                  [(ngModel)]="memberDetails.remarks"
+                  placeholder="Enter Remarks"
                 />
               </div>
             </div>
@@ -413,7 +330,7 @@
           <div class="col-sm-12">
             <div class="d-flex gap-2 justify-content-end">
               <button type="button" class="btn btn-outline-secondary">Cancel</button>
-              <button type="button" class="btn btn-primary">Save</button>
+              <button type="button" class="btn btn-primary" (click)="addPackage()">Add Package</button>
             </div>
           </div>
         </div>

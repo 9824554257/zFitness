@@ -24,13 +24,11 @@ export class AppService {
   getAllMemberDetails = () =>
     this.http.get(`${this.baseUrl}/members/getMemberDetails`, { headers: this.getHeaders() });
 
-  saveMemberDetails = (request: any) =>
-    this.http.post(`${this.baseUrl}/members/saveMemberDetails`, request, {
-      headers: this.getHeaders(),
-    });
-
-  getMasterPackageDetails = () =>
-    this.http.get(`${this.baseUrl}/package/getPackageDetails`, { headers: this.getHeaders() });
+  saveMemberDetails = (request : any) => this.http.post(`${this.baseUrl}/members/saveMemberDetails`, request, {headers: this.getHeaders()})
+  
+  getMasterPackageDetails = () => this.http.get(`${this.baseUrl}/package/getPackageDetails`, {headers: this.getHeaders()});
+  
+  saveMasterPackageDetails = (request : any) => this.http.post(`${this.baseUrl}/package/savePackageDetails`, request, {headers: this.getHeaders()});
 
   savePackageMasterDetails = (request: any) =>
     this.http.post(`${this.baseUrl}/package/savePackageDetails`, request, {
