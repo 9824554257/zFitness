@@ -100,10 +100,10 @@ export class AddMember implements OnInit {
   }
 
   fetchPackageDetails() {
-    this.sharedService.masterPackageDetailsList = [];
+    this.sharedService.masterPackageDetailsList.set([]);
     this.appService.getMasterPackageDetails().subscribe((data: any) => {
       if (!this.sharedService.checkIfValueIsEmpty(data)) {
-        this.sharedService.masterPackageDetailsList = data['data'];
+        this.sharedService.masterPackageDetailsList.set(data['data']);
       }
     }, (error: any) => {
 
@@ -112,7 +112,7 @@ export class AddMember implements OnInit {
 
   updatePackageDetails() {
     if(!this.sharedService.checkIfValueIsEmpty(this.memberDetails.packageName)) {
-      let selectedObjForPackage : any = this.sharedService.masterPackageDetailsList.filter((singleObj : any) => singleObj['_id'] === this.memberDetails.packageName);
+      let selectedObjForPackage : any = this.sharedService.masterPackageDetailsList().filter((singleObj : any) => singleObj['_id'] === this.memberDetails.packageName);
       if(selectedObjForPackage.length > 0) {
         this.memberDetails.period= selectedObjForPackage[0]['duration'];
         this.memberDetails.amount= selectedObjForPackage[0]['fee'];
