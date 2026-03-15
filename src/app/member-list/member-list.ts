@@ -26,7 +26,7 @@ export class MemberList implements OnInit {
   fetchMemberDetails() {
     this.appService.getAllMemberDetails().subscribe((data : any) => {
       if(!this.sharedService.checkIfValueIsEmpty(data)) {
-        this.sharedService.memberDetails = data;
+        this.sharedService.memberDetails = data['data'];
       }
     },
    (error : any) => {
