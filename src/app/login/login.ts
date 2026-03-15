@@ -32,7 +32,7 @@ export class Login implements OnInit {
     };
     let reqLogin = { email: this.emailID, password: this.password };
     this.http
-      .post('https://gym-five-blush.vercel.app/users/login', reqLogin, httpOptions)
+      .post('http://localhost:3000/users/login', reqLogin, httpOptions)
       .subscribe(
         (data :any) => {
           if(data.token) {
