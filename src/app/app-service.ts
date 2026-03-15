@@ -24,14 +24,38 @@ export class AppService {
   getAllMemberDetails = () =>
     this.http.get(`${this.baseUrl}/members/getMemberDetails`, { headers: this.getHeaders() });
 
-  saveMemberDetails = (request : any) => this.http.post(`${this.baseUrl}/members/saveMemberDetails`, request, {headers: this.getHeaders()})
-  
-  getMasterPackageDetails = () => this.http.get(`${this.baseUrl}/package/getPackageDetails`, {headers: this.getHeaders()});
-  
-  saveMasterPackageDetails = (request : any) => this.http.post(`${this.baseUrl}/package/savePackageDetails`, request, {headers: this.getHeaders()});
+  saveMemberDetails = (request: any) =>
+    this.http.post(`${this.baseUrl}/members/saveMemberDetails`, request, {
+      headers: this.getHeaders(),
+    });
+
+  getMasterPackageDetails = () =>
+    this.http.get(`${this.baseUrl}/package/getPackageDetails`, { headers: this.getHeaders() });
+
+  saveMasterPackageDetails = (request: any) =>
+    this.http.post(`${this.baseUrl}/package/savePackageDetails`, request, {
+      headers: this.getHeaders(),
+    });
 
   savePackageMasterDetails = (request: any) =>
     this.http.post(`${this.baseUrl}/package/savePackageDetails`, request, {
       headers: this.getHeaders(),
     });
+
+  //Misc master API Starts
+  saveMiscData = (request: any) =>
+    this.http.post(`${this.baseUrl}/miscMaster/saveMiscMaster`, request, {
+      headers: this.getHeaders(),
+    });
+
+  getMiscMasterDataFromType = (request: any) =>
+    this.http.post(`${this.baseUrl}/miscMaster/getMiscMaster`, request, {
+      headers: this.getHeaders(),
+    });
+
+  // deleteMiscData = (request: any) =>
+  //   this.http.delete(`${this.baseUrl}/miscMaster/getMiscMaster`, request, {
+  //     headers: this.getHeaders(),
+  //   });
+  //Misc master API Ends
 }

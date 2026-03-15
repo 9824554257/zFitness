@@ -20,4 +20,5 @@ export const routes: Routes = [
   { path: 'staffList', component: StaffList },
   { path: 'login', component: Login },
   { path: 'packageMaster', component: PackageMaster },
+  { path: '', component: Login },
 ];

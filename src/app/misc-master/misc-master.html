@@ -12,29 +12,130 @@
           <div class="row gx-4">
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a6"> Occupation</label>
-                <select class="form-select" id="a6">
-                  <option value="0">Select</option>
-                  <option value="1">Developer</option>
-                  <option value="2">Designer</option>
-                  <option value="3">Teacher</option>
-                  <option value="4">Doctor</option>
-                  <option value="5">Business</option>
+                <label class="form-label" for="a6"> Type</label>
+                <select
+                  class="form-select"
+                  id="type"
+                  name="type"
+                  [(ngModel)]="type"
+                  (change)="getMiscDataFromType()"
+                >
+                  <option value="Select">Select</option>
+                  <option value="Occupation">Occupation</option>
+                  <option value="Marital Status">Marital Status</option>
+                  <option value="Shift type">Shift type</option>
                 </select>
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a1"> Name <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="a1" placeholder="Enter Name" />
+                <input
+                  type="text"
+                  class="form-control"
+                  id="textValue"
+                  name="textValue"
+                  [(ngModel)]="textValue"
+                  placeholder="Enter Name"
+                />
               </div>
             </div>
             <div class="col-sm-12">
               <div class="d-flex gap-2 justify-content-end">
                 <button type="button" class="btn btn-outline-secondary">Cancel</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-primary" (click)="saveMiscData()">Save</button>
               </div>
             </div>
+
+            <!---Misc Start List-->
+            <div class="row gx-4">
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">List</h5>
+                  </div>
+                  <div class="card-body">
+                    <!-- Table starts -->
+                    <div class="table-responsive">
+                      <table id="basicExample" class="table m-0 align-middle">
+                        <thead>
+                          <tr>
+                            <!-- <th>#</th> -->
+                            <th>Type</th>
+                            <th>Value</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let singlePackage of miscData">
+                            <!-- <td>001</td> -->
+                            <td>
+                              <!-- <img
+                              src="assets/images/user.png"
+                              class="img-shadow img-2x rounded-5 me-1"
+                              alt="Fitness Dashboard"
+                            /> -->
+                              {{ singlePackage.headerType }}
+                            </td>
+                            <td>{{ singlePackage._id }}</td>
+                            <td>
+                              <div class="d-inline-flex gap-1">
+                                <button
+                                  class="btn btn-outline-danger btn-sm"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#delRow"
+                                >
+                                  <i class="ri-delete-bin-line"></i>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- Table ends -->
+
+                    <!-- Modal Delete Row -->
+                    <div
+                      class="modal fade"
+                      id="delRow"
+                      tabindex="-1"
+                      aria-labelledby="delRowLabel"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="delRowLabel">Confirm</h5>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            Are you sure you want to delete the gym member?
+                          </div>
+                          <div class="modal-footer">
+                            <div class="d-flex justify-content-end gap-2">
+                              <button
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                              >
+                                No
+                              </button>
+                              <button class="btn btn-danger">Yes</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!---Misc End List-->
           </div>
           <!-- Row ends -->
         </div>
