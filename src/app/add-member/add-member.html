@@ -253,7 +253,7 @@
                   (ngModelChange)="updatePackageDetails()"
                 >
                   
-                  @for(singlePackage of sharedService.masterPackageDetailsList; track singlePackage._id) {
+                  @for(singlePackage of sharedService.masterPackageDetailsList(); track singlePackage._id) {
                     <option [value]="singlePackage._id" [id]="singlePackage._id">{{singlePackage.packageName}}</option>
                   } @empty {
                     <option value="0">No packages Available</option>

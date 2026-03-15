@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharedService {
-  masterPackageDetailsList : any = [];
-  memberDetails : any = [];
+  masterPackageDetailsList = signal<any[]>([]);
+  memberDetails = signal<any[]>([]);
   
   constructor() {
 

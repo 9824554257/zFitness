@@ -40,7 +40,7 @@
                 </tr>
               </thead>
               <tbody>
-                @for(member of sharedService.memberDetails; track member._id) {
+                @for(member of sharedService.memberDetails(); track member._id) {
                   <tr>
                     <td>{{member.memberNo}}</td>
                     <td>{{member.fullName}}</td>
