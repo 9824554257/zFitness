@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppService } from '../app-service';
-import { SharedService } from '../shared-service'
+import { SharedService } from '../shared-service';
 
 @Component({
   selector: 'app-add-member',
@@ -48,10 +48,13 @@ export class AddMember implements OnInit {
     },
   };
 
-  constructor(private appService : AppService, public sharedService : SharedService) {}
+  constructor(
+    private appService: AppService,
+    public sharedService: SharedService,
+  ) {}
 
   ngOnInit(): void {
-    this.fetchPackageDetails()
+    this.fetchPackageDetails();
   }
 
   printData() {
@@ -101,26 +104,28 @@ export class AddMember implements OnInit {
 
   fetchPackageDetails() {
     this.sharedService.masterPackageDetailsList.set([]);
-    this.appService.getMasterPackageDetails().subscribe((data: any) => {
-      if (!this.sharedService.checkIfValueIsEmpty(data)) {
-        this.sharedService.masterPackageDetailsList.set(data['data']);
-      }
-    }, (error: any) => {
-
-    })
+    this.appService.getMasterPackageDetails().subscribe(
+      (data: any) => {
+        if (!this.sharedService.checkIfValueIsEmpty(data)) {
+          this.sharedService.masterPackageDetailsList.set(data['data']);
+        }
+      },
+      (error: any) => {},
+    );
   }
 
   updatePackageDetails() {
-    if(!this.sharedService.checkIfValueIsEmpty(this.memberDetails.packageName)) {
-      let selectedObjForPackage : any = this.sharedService.masterPackageDetailsList().filter((singleObj : any) => singleObj['_id'] === this.memberDetails.packageName);
-      if(selectedObjForPackage.length > 0) {
-        this.memberDetails.period= selectedObjForPackage[0]['duration'];
-        this.memberDetails.amount= selectedObjForPackage[0]['fee'];
-        this.memberDetails.selectedPackageName = selectedObjForPackage[0]['packageName']
+    if (!this.sharedService.checkIfValueIsEmpty(this.memberDetails.packageName)) {
+      let selectedObjForPackage: any = this.sharedService
+        .masterPackageDetailsList()
+        .filter((singleObj: any) => singleObj['_id'] === this.memberDetails.packageName);
+      if (selectedObjForPackage.length > 0) {
+        this.memberDetails.period = selectedObjForPackage[0]['duration'];
+        this.memberDetails.amount = selectedObjForPackage[0]['fee'];
+        this.memberDetails.selectedPackageName = selectedObjForPackage[0]['packageName'];
         this.memberDetails.packageActualFee = selectedObjForPackage[0]['fee'];
       }
     }
-
   }
 
   addPackage() {

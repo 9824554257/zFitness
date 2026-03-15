@@ -6,9 +6,8 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AppService {
-
-  // baseUrl : any = 'https://gym-five-blush.vercel.app';
-  baseUrl : any = 'http://localhost:3000';
+  baseUrl: any = 'https://gym-five-blush.vercel.app';
+  //baseUrl : any = 'http://localhost:3000';
 
   constructor(
     public http: HttpClient,
@@ -18,11 +17,12 @@ export class AppService {
   getHeaders = () => {
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
     });
-  } 
+  };
 
-  getAllMemberDetails = () => this.http.get(`${this.baseUrl}/members/getMemberDetails`, {headers: this.getHeaders()});
+  getAllMemberDetails = () =>
+    this.http.get(`${this.baseUrl}/members/getMemberDetails`, { headers: this.getHeaders() });
 
   saveMemberDetails = (request : any) => this.http.post(`${this.baseUrl}/members/saveMemberDetails`, request, {headers: this.getHeaders()})
   
@@ -30,4 +30,8 @@ export class AppService {
   
   saveMasterPackageDetails = (request : any) => this.http.post(`${this.baseUrl}/package/savePackageDetails`, request, {headers: this.getHeaders()});
 
+  savePackageMasterDetails = (request: any) =>
+    this.http.post(`${this.baseUrl}/package/savePackageDetails`, request, {
+      headers: this.getHeaders(),
+    });
 }
