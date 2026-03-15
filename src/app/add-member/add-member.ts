@@ -66,9 +66,9 @@ export class AddMember implements OnInit {
       mobileNumber: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.mobileNumber) ? this.memberDetails.mobileNumber : '',
       dateOfBirth: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.dateOfBirth) ? this.memberDetails.dateOfBirth : null,
       occupation: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.occupation) ? this.memberDetails.occupation : '',
-      package: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.packageName) ? this.memberDetails.packageName : null,
-      packageName: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.selectedPackageName) ? this.memberDetails.selectedPackageName : null,
-      packageActualFee: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.packageActualFee) ? this.memberDetails.packageActualFee : null,
+      // package: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.packageName) ? this.memberDetails.packageName : null,
+      // packageName: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.selectedPackageName) ? this.memberDetails.selectedPackageName : null,
+      // packageActualFee: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.packageActualFee) ? this.memberDetails.packageActualFee : null,
       amount: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.amount) ? this.memberDetails.amount : null,
       planStartDate: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.startDate) ? this.memberDetails.startDate : null,
       planEndDate: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.endDate) ? this.memberDetails.endDate : null,
@@ -91,7 +91,7 @@ export class AddMember implements OnInit {
     };
     this.appService.saveMemberDetails(request).subscribe((data : any) => {
       if(!this.sharedService.checkIfValueIsEmpty(data)) {
-        
+        this.sharedService.savedMemberDataResponse.set(data['data'])
       }
     }, (err : any) => {
 
@@ -121,5 +121,26 @@ export class AddMember implements OnInit {
       }
     }
 
+  }
+
+  addPackage() {
+    if(!this.sharedService.checkIfValueIsEmpty(this.sharedService.savedMemberDataResponse())) {
+      let request : any = {
+        memberNo: this.sharedService.savedMemberDataResponse().memberNo,
+        memberID: this.sharedService.savedMemberDataResponse()._id,
+        masterPackageId: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.packageName) ? this.memberDetails.packageName : null,
+        packageName: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.selectedPackageName) ? this.memberDetails.selectedPackageName : null,
+        fee: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.packageActualFee) ? this.memberDetails.packageActualFee : null,
+        startDate: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.startDate) ? this.memberDetails.startDate : null,
+        endDate: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.endDate) ? this.memberDetails.endDate : null,
+        remarks: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.remarks) ? this.memberDetails.remarks : null,
+        discountedPrice: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.amount) ? this.memberDetails.amount : null,
+      }
+      this.appService.saveMasterPackageDetails(request).subscribe((data : any) => {
+
+      }, (error : any) => {
+
+      })
+    }
   }
 }

@@ -6,6 +6,7 @@ import { Injectable, signal } from '@angular/core';
 export class SharedService {
   masterPackageDetailsList = signal<any[]>([]);
   memberDetails = signal<any[]>([]);
+  savedMemberDataResponse = signal<any>({});
   
   constructor() {
 
