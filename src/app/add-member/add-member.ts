@@ -53,8 +53,41 @@ export class AddMember implements OnInit {
     public sharedService: SharedService,
   ) {}
 
+  populateMemberDetailsFromResponse() {
+    if(!this.sharedService.checkIfValueIsEmpty(this.sharedService.savedMemberDataResponse())) {
+      this.memberDetails.memberNumber = this.sharedService.savedMemberDataResponse().memberNo || '';
+      this.memberDetails.fullName = this.sharedService.savedMemberDataResponse().fullName || '';
+      this.memberDetails.emailAddress = this.sharedService.savedMemberDataResponse().email || '';
+      this.memberDetails.mobileNumber = this.sharedService.savedMemberDataResponse().mobileNumber || '';
+      this.memberDetails.dateOfBirth = this.sharedService.savedMemberDataResponse().dateOfBirth || '';
+      this.memberDetails.occupation = this.sharedService.savedMemberDataResponse().occupation || '';
+      this.memberDetails.amount = this.sharedService.savedMemberDataResponse().amount || '';
+      this.memberDetails.startDate = this.sharedService.savedMemberDataResponse().planStartDate || '';
+      this.memberDetails.endDate = this.sharedService.savedMemberDataResponse().planEndDate || '';
+      this.memberDetails.dueDate = this.sharedService.savedMemberDataResponse().dueDate || '';
+      this.memberDetails.remarks = this.sharedService.savedMemberDataResponse().remarks || '';
+      this.memberDetails.gender = this.sharedService.savedMemberDataResponse().gender || '';
+      this.memberDetails.joinDate = this.sharedService.savedMemberDataResponse().joinDate || '';
+      this.memberDetails.joinWeight = this.sharedService.savedMemberDataResponse().joinWeight || '';
+      this.memberDetails.joinHeight = this.sharedService.savedMemberDataResponse().joinHeight || '';
+      this.memberDetails.age = this.sharedService.savedMemberDataResponse().age || '';
+      this.memberDetails.period = this.sharedService.savedMemberDataResponse().period || '';
+      this.memberDetails.personalTrainer = this.sharedService.savedMemberDataResponse().personalTrainer || '';
+      this.memberDetails.ptAmount = this.sharedService.savedMemberDataResponse().ptAmount || '';
+      this.memberDetails.maritalStatus = this.sharedService.savedMemberDataResponse().maritalStatus || '';
+      this.memberDetails.address = this.sharedService.savedMemberDataResponse().address || '';
+      this.memberDetails.shiftType = this.sharedService.savedMemberDataResponse().shiftType || '';
+      this.memberDetails.time = this.sharedService.savedMemberDataResponse().time || '';
+      this.memberDetails.paidDate = this.sharedService.savedMemberDataResponse().paidDate || '';
+    }
+    
+    // Add more assignments as needed for other fields
+  }
+
   ngOnInit(): void {
+    this.populateMemberDetailsFromResponse()
     this.fetchPackageDetails();
+
   }
 
   printData() {

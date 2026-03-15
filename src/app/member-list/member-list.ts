@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AppService } from '../app-service';
 import { SharedService } from '../shared-service';
 
@@ -14,7 +14,8 @@ import { SharedService } from '../shared-service';
 export class MemberList implements OnInit {
   constructor(
     private appService: AppService,
-    public sharedService : SharedService
+    public sharedService : SharedService,
+    public router: Router,
   ) {
 
   }
@@ -32,5 +33,10 @@ export class MemberList implements OnInit {
    (error : any) => {
 
    })
+  }
+
+  editMemberDetails(member : any) {
+    this.router.navigate(['/newMember']);
+    this.sharedService.savedMemberDataResponse.set(member);
   }
 }
