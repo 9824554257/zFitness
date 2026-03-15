@@ -1,0 +1,150 @@
+<!-- App body starts -->
+<div class="app-body">
+  <!-- Row starts -->
+  <div class="row gx-4">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Package Master</h5>
+        </div>
+        <div class="card-body">
+          <!-- Row starts -->
+          <div class="row gx-4">
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1">
+                  Package Name<span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="packageName"
+                  name="packageName"
+                  [(ngModel)]="packageDetail.packageName"
+                  placeholder="Enter Package Name"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1">
+                  Package Duration <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="duration"
+                  name="duration"
+                  [(ngModel)]="packageDetail.duration"
+                  placeholder="Enter Pakage Period"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1"> Fees <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fees"
+                  name="fees"
+                  [(ngModel)]="packageDetail.fee"
+                  placeholder="Enter Price"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1">
+                  Offer Price <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Text4"
+                  placeholder="Enter Offer Price"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1">
+                  Offer Name <span class="text-danger">*</span></label
+                >
+                <input type="text" class="form-control" id="Text5" placeholder="Enter Offer Name" />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1">
+                  Remarks <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="remarks"
+                  name="remarks"
+                  [(ngModel)]="packageDetail.remarks"
+                  placeholder="Enter Remakrs"
+                />
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" class="btn btn-primary" (click)="savePackageDetails()">
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Row ends -->
+        </div>
+      </div>
+      <div class="card m-2">
+        <div class="row g-3 justify-content-center mb-5">
+          <ng-container
+            *ngFor="
+              let singleData of packageDetails.data;
+              let i = index;
+              odd as isOdd;
+              even as isEven
+            "
+          >
+            <div class="col-xl-3 col-md-4 col-12">
+              <!-- Pricing plan start -->
+
+              <div class="pricing-container rounded-3 text-center">
+                <div class="pricing-header px-2 py-3">
+                  <h1 class="m-0 text-uppercase fw-light">{{ singleData.packageName }}</h1>
+                </div>
+                <div class="pricing-price p-2" [ngClass]="isOdd ? 'bg-grd1' : 'bg-dark'">
+                  <h3 class="m-0 text-white fw-bold">
+                    {{ singleData.fee }} <span class="fw-light">Per Month</span>
+                  </h3>
+                  <h6 class="m-0 text-white">30 Credits</h6>
+                </div>
+                <div class="p-3">
+                  <ul
+                    class="pricing-list p-0"
+                    *ngFor="let singleValue of featureObject(singleData.remarks)"
+                  >
+                    <li><i class="ri-supabase-fill text-primary me-2"></i>{{ singleValue }}</li>
+                  </ul>
+                  <div class="d-grid">
+                    <button type="button" class="btn btn-secondary" disabled="disabled">
+                      Current Package
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Pricing plan end -->
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Row ends -->
+</div>
+<!-- App body ends -->

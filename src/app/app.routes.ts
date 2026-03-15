@@ -7,6 +7,7 @@ import { MemberList } from './member-list/member-list';
 import { AddStaff } from './add-staff/add-staff';
 import { StaffList } from './staff-list/staff-list';
 import { Login } from './login/login';
+import { PackageMaster } from './package-master/package-master';
 
 export const routes: Routes = [
   { path: 'miscMaster', component: MiscMaster },
@@ -18,5 +19,5 @@ export const routes: Routes = [
   { path: 'addStaff', component: AddStaff },
   { path: 'staffList', component: StaffList },
   { path: 'login', component: Login },
-  { path: '', component: Login },
+  { path: 'packageMaster', component: PackageMaster },
 ];
