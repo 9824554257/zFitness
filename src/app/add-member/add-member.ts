@@ -3,10 +3,11 @@ import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angula
 import { FormsModule } from '@angular/forms';
 import { AppService } from '../app-service';
 import { SharedService } from '../shared-service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-member',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './add-member.html',
   styleUrl: './add-member.css',
 })
@@ -200,13 +201,27 @@ export class AddMember implements OnInit {
       (error: any) => {},
     );
   }
+  miscData: any;
+  occupationList: any;
+  maritalStatusList: any;
+  shiftList: any;
 
   getMiscDataFromType() {
-    let request = { headerTypes: ['occupation', 'Marital Status', 'Shift type'] };
+    let request = { headerTypes: ['Occupation', 'Marital Status', 'Shift type'] };
     this.appService.getMiscMasterDataFromType(request).subscribe(
       (data: any) => {
         if (!this.sharedService.checkIfValueIsEmpty(data)) {
           //Misc data to assign to different variables
+          this.miscData = data['data'];
+          this.occupationList = this.miscData.filter(
+            (singleData: any) => singleData.headerType === 'Occupation',
+          )[0].keyValuePairs;
+          this.maritalStatusList = this.miscData.filter(
+            (singleData: any) => singleData.headerType === 'Marital Status',
+          )[0].keyValuePairs;
+          this.shiftList = this.miscData.filter(
+            (singleData: any) => singleData.headerType === 'Shift type',
+          )[0].keyValuePairs;
           this.cdr.detectChanges();
         }
       },

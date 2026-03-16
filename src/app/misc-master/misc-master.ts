@@ -28,7 +28,7 @@ export class MiscMaster {
     this.appService.getMiscMasterDataFromType(request).subscribe(
       (data: any) => {
         if (!this.sharedService.checkIfValueIsEmpty(data)) {
-          this.miscData = data['data'];
+          this.miscData = data['data'][0].keyValuePairs;
           this.cdr.detectChanges();
         }
       },
@@ -43,9 +43,18 @@ export class MiscMaster {
       !this.sharedService.checkIfValueIsEmpty(this.type) &&
       this.type.toString().toUpperCase() !== 'SELECT'
     ) {
-      let request = { headerType: this.type, displayValue: this.textValue };
+      let request = {
+        headerType: this.type,
+        keyValuePairs: [
+          {
+            key: this.textValue,
+            value: this.textValue,
+          },
+        ],
+      };
       this.appService.saveMiscData(request).subscribe(
         (data) => {
+          this.getMiscDataFromType();
           alert('Misc data saved succesfully.');
         },
         (error) => {
