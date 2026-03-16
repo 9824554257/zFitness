@@ -1,7 +1,7 @@
 <!-- App body starts -->
 <div class="app-body">
   <!-- Row starts -->
-  <div class="row gx-4">
+  <!-- <div class="row gx-4">
     <div class="col-sm-12">
       <div class="card mb-4">
         <div class="card-header">
@@ -12,11 +12,11 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- Row ends -->
 
   <!-- Row starts -->
-  <div class="row gx-4">
+  <div class="row gx-4 mt-4">
     <div class="col-sm-12">
       <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between">
@@ -40,39 +40,41 @@
                 </tr>
               </thead>
               <tbody>
-                @for(member of sharedService.memberDetails(); track member._id) {
+                @for (member of sharedService.memberDetails(); track member._id) {
                   <tr>
-                    <td>{{member.memberNo}}</td>
-                    <td>{{member.fullName}}</td>
-                    <td>{{member.age}}</td>
-                    <td>{{member.gender}}</td>
-                    <td>{{member.mobileNumber}}</td>
-                    <td>{{member.email}}</td>
-                    <td>{{member.joinDate}}</td>
+                    <td>{{ member.memberNo }}</td>
+                    <td>{{ member.fullName }}</td>
+                    <td>{{ member.age }}</td>
+                    <td>{{ member.gender }}</td>
+                    <td>{{ member.mobileNumber }}</td>
+                    <td>{{ member.email }}</td>
+                    <td>{{ member.joinDate }}</td>
                     <td>
                       <!-- actions -->
                       <div class="d-inline-flex gap-1">
-                      <button
-                        class="btn btn-outline-danger btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#delRow"
-                      >
-                        <i class="ri-delete-bin-line"></i>
-                      </button>
-                      <button
-                        (click)="editMemberDetails(member)"
-                        class="btn btn-outline-success btn-sm"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        data-bs-title="Edit Gym Member"
-                      >
-                        <i class="ri-edit-box-line"></i>
-                      </button>
-                    </div>
+                        <button
+                          class="btn btn-outline-danger btn-sm"
+                          data-bs-toggle="modal"
+                          data-bs-target="#delRow"
+                        >
+                          <i class="ri-delete-bin-line"></i>
+                        </button>
+                        <button
+                          (click)="editMemberDetails(member)"
+                          class="btn btn-outline-success btn-sm"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          data-bs-title="Edit Gym Member"
+                        >
+                          <i class="ri-edit-box-line"></i>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 } @empty {
-                  <tr><td colspan="100%" class="text-center"> No members</td></tr>
+                  <tr>
+                    <td colspan="100%" class="text-center">No members</td>
+                  </tr>
                 }
               </tbody>
             </table>

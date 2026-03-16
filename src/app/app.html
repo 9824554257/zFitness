@@ -1,4 +1,84 @@
-<ng-container *ngIf="!hideMenu()">
+<ng-container *ngIf="sharedService.isLogInPage()">
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Bootstrap Gallery - Fitness Admin Templates & Dashboard</title>
+      <!-- Meta -->
+      <meta name="title" content="Getfit Admin Dashboard Template" />
+      <meta name="description" content="Marketplace for Bootstrap Admin Dashboards" />
+      <meta name="author" content="Bootstrap Gallery" />
+      <meta
+        name="keywords"
+        content="Fitness, Gym, Workout, Physical fitness, Nutrition, Bodybuilding, Wellness, Yoga, Fitness Dashboard, Gym Dashboard, Workout Dashboard, Fitness Admin, Gym Admin, Workout Admin"
+      />
+      <link rel="canonical" href="https://www.bootstrap.gallery/" />
+      <meta property="og:url" content="https://www.bootstrap.gallery" />
+      <meta
+        property="og:title"
+        content="Admin Templates - Dashboard Templates | Bootstrap Gallery"
+      />
+      <meta property="og:description" content="Marketplace for Bootstrap Admin Dashboards" />
+      <meta property="og:type" content="Website" />
+      <meta property="og:site_name" content="Bootstrap Gallery" />
+      <link rel="shortcut icon" href="public/assets/images/favicon.svg" />
+      <!-- *************
+		************ CSS Files *************
+	************* -->
+      <!-- <link rel="stylesheet" href="../../public/assets/fonts/remix/remixicon.css" /> -->
+      <link rel="stylesheet" href="/assets/css/main.min.css" />
+      <!-- *************
+		************ Vendor Css Files *************
+	************ -->
+      <!-- Scrollbar CSS -->
+      <!-- <link
+      rel="stylesheet"
+      href="../../public/assets/vendor/overlay-scroll/OverlayScrollbars.min.css"
+    /> -->
+      <link
+        href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"
+        rel="stylesheet"
+      />
+    </head>
+    <body>
+      <!-- Page wrapper starts -->
+      <div class="page-wrapper">
+        <!-- Main container starts -->
+        <div class="main-container">
+          <!-- App container starts -->
+          <div class="app-container">
+            <router-outlet />
+            <!-- App footer starts -->
+            <div class="app-footer bg-white">
+              <span>ALLURE SOFTTECH</span>
+            </div>
+            <!-- App footer ends -->
+          </div>
+          <!-- App container ends -->
+        </div>
+        <!-- Main container ends -->
+      </div>
+      <!-- Page wrapper ends -->
+      <!-- *************
+			************ JavaScript Files *************
+		************* -->
+      <!-- Required jQuery first, then Bootstrap Bundle JS -->
+      <script src="public/assets/js/jquery.min.js"></script>
+      <script src="public/assets/js/bootstrap.bundle.min.js"></script>
+      <script src="public/assets/js/moment.min.js"></script>
+      <!-- *************
+			************ Vendor Js Files *************
+		************* -->
+      <!-- Overlay Scroll JS -->
+      <script src="public/assets/vendor/overlay-scroll/jquery.overlayScrollbars.min.js"></script>
+      <script src="public/assets/vendor/overlay-scroll/custom-scrollbar.js"></script>
+      <!-- Custom JS files -->
+      <script src="public/assets/js/custom.js"></script>
+    </body>
+  </html>
+</ng-container>
+<ng-container *ngIf="!sharedService.isLogInPage()">
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html lang="en">
     <head>
@@ -484,7 +564,7 @@
                       <h6 class="m-0">Nick Gonzalez</h6>
                     </div>
                     <div class="mx-3 my-2 d-grid">
-                      <a href="login.html" class="btn btn-danger">Logout</a>
+                      <a routerLink="/login" class="btn btn-danger">Logout</a>
                     </div>
                   </div>
                 </div>
@@ -542,7 +622,4 @@
       <script src="public/assets/js/custom.js"></script>
     </body>
   </html>
-</ng-container>
-<ng-container *ngIf="hideMenu()">
-  <router-outlet />
 </ng-container>
