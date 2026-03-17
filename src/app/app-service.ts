@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AppService {
-  baseUrl: any = 'https://gym-five-blush.vercel.app';
-  // baseUrl : any = 'http://localhost:3000';
+  // baseUrl: any = 'https://gym-five-blush.vercel.app';
+  baseUrl : any = 'http://localhost:3000';
 
   constructor(
     public http: HttpClient,
@@ -52,6 +52,10 @@ export class AppService {
     this.http.post(`${this.baseUrl}/miscMaster/getMiscMaster`, request, {
       headers: this.getHeaders(),
     });
+
+  updateMemberDetailsByUniqueId = (request : any) => this.http.put(`${this.baseUrl}/members/updateMemberByUniqueId`, request, {
+    headers: this.getHeaders(),
+  });
 
   // deleteMiscData = (request: any) =>
   //   this.http.delete(`${this.baseUrl}/miscMaster/getMiscMaster`, request, {
