@@ -278,8 +278,13 @@ export class AddMember implements OnInit {
           ? this.memberDetails.amount
           : null,
       };
-      this.appService.saveMasterPackageDetails(request).subscribe(
-        (data: any) => {},
+      this.appService.saveMemberPackageDetails(request).subscribe(
+        (data: any) => {
+          if(this.sharedService.checkIfValueIsEmpty(this.memberDetails.memberPackageDetails)) {
+            this.memberDetails.memberPackageDetails = [];
+          }
+          this.memberDetails.memberPackageDetails.push(data['data']);
+        },
         (error: any) => {},
       );
     }
