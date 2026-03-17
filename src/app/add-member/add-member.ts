@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AppService } from '../app-service';
 import { SharedService } from '../shared-service';
 import { CommonModule } from '@angular/common';
+import { LoaderService } from '../loader-service';
 
 @Component({
   selector: 'app-add-member',
@@ -53,6 +54,7 @@ export class AddMember implements OnInit {
     private appService: AppService,
     public sharedService: SharedService,
     public cdr: ChangeDetectorRef,
+    public loaderService: LoaderService,
   ) {}
 
   populateMemberDetailsFromResponse() {
@@ -86,13 +88,15 @@ export class AddMember implements OnInit {
       this.memberDetails.shiftType = this.sharedService.savedMemberDataResponse().shiftType || '';
       this.memberDetails.time = this.sharedService.savedMemberDataResponse().time || '';
       this.memberDetails.paidDate = this.sharedService.savedMemberDataResponse().paidDate || '';
-      this.memberDetails.memberPackageDetails = this.sharedService.savedMemberDataResponse().memberPackageDetails
+      this.memberDetails.memberPackageDetails =
+        this.sharedService.savedMemberDataResponse().memberPackageDetails;
     }
 
     // Add more assignments as needed for other fields
   }
 
   ngOnInit(): void {
+    this.loaderService.show.set(true);
     this.populateMemberDetailsFromResponse();
     this.fetchPackageDetails();
     this.getMiscDataFromType();
@@ -103,8 +107,8 @@ export class AddMember implements OnInit {
   }
 
   savememberDetails() {
+    this.loaderService.show.set(true);
     let request: any = {
-      
       memberNo: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.memberNumber)
         ? this.memberDetails.memberNumber
         : '',
@@ -183,16 +187,23 @@ export class AddMember implements OnInit {
       // createdUser should be set in backend or from logged-in user context
     };
 
-    if(!this.sharedService.checkIfValueIsEmpty(this.sharedService.savedMemberDataResponse())) {
+    if (!this.sharedService.checkIfValueIsEmpty(this.sharedService.savedMemberDataResponse())) {
       request['uniqueId'] = this.sharedService.savedMemberDataResponse()._id;
     }
-    this.appService[!this.sharedService.checkIfValueIsEmpty(this.sharedService.savedMemberDataResponse()) ? 'updateMemberDetailsByUniqueId' : 'saveMemberDetails'](request).subscribe(
+    this.appService[
+      !this.sharedService.checkIfValueIsEmpty(this.sharedService.savedMemberDataResponse())
+        ? 'updateMemberDetailsByUniqueId'
+        : 'saveMemberDetails'
+    ](request).subscribe(
       (data: any) => {
         if (!this.sharedService.checkIfValueIsEmpty(data)) {
           this.sharedService.savedMemberDataResponse.set(data['data']);
+          this.loaderService.show.set(false);
         }
       },
-      (err: any) => {},
+      (err: any) => {
+        this.loaderService.show.set(false);
+      },
     );
   }
 
@@ -202,9 +213,12 @@ export class AddMember implements OnInit {
       (data: any) => {
         if (!this.sharedService.checkIfValueIsEmpty(data)) {
           this.sharedService.masterPackageDetailsList.set(data['data']);
+          this.loaderService.show.set(false);
         }
       },
-      (error: any) => {},
+      (error: any) => {
+        this.loaderService.show.set(false);
+      },
     );
   }
   miscData: any;
@@ -228,10 +242,12 @@ export class AddMember implements OnInit {
           this.shiftList = this.miscData.filter(
             (singleData: any) => singleData.headerType === 'Shift type',
           )[0].keyValuePairs;
+          this.loaderService.show.set(false);
           this.cdr.detectChanges();
         }
       },
       (error) => {
+        //this.loaderService.show.set(false);
         alert('Error in fetching data for selected Misc Type.');
       },
     );
@@ -280,7 +296,7 @@ export class AddMember implements OnInit {
       };
       this.appService.saveMemberPackageDetails(request).subscribe(
         (data: any) => {
-          if(this.sharedService.checkIfValueIsEmpty(this.memberDetails.memberPackageDetails)) {
+          if (this.sharedService.checkIfValueIsEmpty(this.memberDetails.memberPackageDetails)) {
             this.memberDetails.memberPackageDetails = [];
           }
           this.memberDetails.memberPackageDetails.push(data['data']);
