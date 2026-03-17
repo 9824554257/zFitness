@@ -86,6 +86,7 @@ export class AddMember implements OnInit {
       this.memberDetails.shiftType = this.sharedService.savedMemberDataResponse().shiftType || '';
       this.memberDetails.time = this.sharedService.savedMemberDataResponse().time || '';
       this.memberDetails.paidDate = this.sharedService.savedMemberDataResponse().paidDate || '';
+      this.memberDetails.memberPackageDetails = this.sharedService.savedMemberDataResponse().memberPackageDetails
     }
 
     // Add more assignments as needed for other fields
@@ -103,6 +104,7 @@ export class AddMember implements OnInit {
 
   savememberDetails() {
     let request: any = {
+      
       memberNo: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.memberNumber)
         ? this.memberDetails.memberNumber
         : '',
@@ -180,7 +182,11 @@ export class AddMember implements OnInit {
         : null,
       // createdUser should be set in backend or from logged-in user context
     };
-    this.appService.saveMemberDetails(request).subscribe(
+
+    if(!this.sharedService.checkIfValueIsEmpty(this.sharedService.savedMemberDataResponse())) {
+      request['uniqueId'] = this.sharedService.savedMemberDataResponse()._id;
+    }
+    this.appService[!this.sharedService.checkIfValueIsEmpty(this.sharedService.savedMemberDataResponse()) ? 'updateMemberDetailsByUniqueId' : 'saveMemberDetails'](request).subscribe(
       (data: any) => {
         if (!this.sharedService.checkIfValueIsEmpty(data)) {
           this.sharedService.savedMemberDataResponse.set(data['data']);
@@ -272,8 +278,13 @@ export class AddMember implements OnInit {
           ? this.memberDetails.amount
           : null,
       };
-      this.appService.saveMasterPackageDetails(request).subscribe(
-        (data: any) => {},
+      this.appService.saveMemberPackageDetails(request).subscribe(
+        (data: any) => {
+          if(this.sharedService.checkIfValueIsEmpty(this.memberDetails.memberPackageDetails)) {
+            this.memberDetails.memberPackageDetails = [];
+          }
+          this.memberDetails.memberPackageDetails.push(data['data']);
+        },
         (error: any) => {},
       );
     }

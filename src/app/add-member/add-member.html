@@ -364,7 +364,7 @@
                     </thead>
                     <tbody>
                       @for (
-                        singlePackage of sharedService.masterPackageDetailsList();
+                        singlePackage of memberDetails.memberPackageDetails;
                         track singlePackage._id
                       ) {
                         <tr>
@@ -399,6 +399,10 @@
                               </a>
                             </div>
                           </td>
+                        </tr>
+                      } @empty {
+                        <tr>
+                          <td colspan="100%">No packages added</td>
                         </tr>
                       }
                     </tbody>
