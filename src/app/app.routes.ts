@@ -8,8 +8,10 @@ import { AddStaff } from './add-staff/add-staff';
 import { StaffList } from './staff-list/staff-list';
 import { Login } from './login/login';
 import { PackageMaster } from './package-master/package-master';
+import { Home } from './home/home';
 
 export const routes: Routes = [
+  { path: 'home', component: Home },
   { path: 'miscMaster', component: MiscMaster },
   { path: 'inquiryList', component: InquryList },
   { path: 'newInquiry', component: AddInquiry },

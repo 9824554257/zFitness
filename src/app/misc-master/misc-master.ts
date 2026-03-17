@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AppService } from '../app-service';
 import { FormsModule } from '@angular/forms';
 import { SharedService } from '../shared-service';
+import { LoaderService } from '../loader-service';
 
 @Component({
   selector: 'app-misc-master',
@@ -20,19 +21,23 @@ export class MiscMaster {
     public appService: AppService,
     public sharedService: SharedService,
     private cdr: ChangeDetectorRef,
+    public loaderService: LoaderService,
   ) {}
 
   getMiscDataFromType() {
+    this.loaderService.show.set(true);
     this.miscData = [];
     let request = { headerTypes: [this.type] };
     this.appService.getMiscMasterDataFromType(request).subscribe(
       (data: any) => {
         if (!this.sharedService.checkIfValueIsEmpty(data)) {
+          this.loaderService.show.set(false);
           this.miscData = data['data'][0].keyValuePairs;
           this.cdr.detectChanges();
         }
       },
       (error) => {
+        // this.loaderService.show(false);
         alert('Error in fetching data for selected Misc Type.');
       },
     );
@@ -43,6 +48,7 @@ export class MiscMaster {
       !this.sharedService.checkIfValueIsEmpty(this.type) &&
       this.type.toString().toUpperCase() !== 'SELECT'
     ) {
+      this.loaderService.show.set(true);
       let request = {
         headerType: this.type,
         keyValuePairs: [
@@ -58,6 +64,7 @@ export class MiscMaster {
           alert('Misc data saved succesfully.');
         },
         (error) => {
+          //this.loaderService.show(false);
           alert('Error in Misc data save.');
         },
       );

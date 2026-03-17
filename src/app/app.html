@@ -48,7 +48,10 @@
         <div class="main-container">
           <!-- App container starts -->
           <div class="app-container">
-            <router-outlet />
+            <router-outlet
+              ><div *ngIf="loaderService.show()" class="loading-overlay">
+                <span class="loader"></span></div
+            ></router-outlet>
             <!-- App footer starts -->
             <div class="app-footer bg-white">
               <span>ALLURE SOFTTECH</span>
@@ -593,7 +596,11 @@
               <!-- Sales stats ends -->
             </div>
             <!-- App Hero header ends -->
-            <router-outlet />
+
+            <router-outlet
+              ><div class="loading-overlay" *ngIf="loaderService.show()">
+                <span class="loader"></span></div
+            ></router-outlet>
             <!-- App footer starts -->
             <div class="app-footer bg-white">
               <span>ALLURE SOFTTECH</span>

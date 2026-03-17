@@ -4,6 +4,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { LoaderService } from '../loader-service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,7 @@ export class Login implements OnInit {
   constructor(
     public http: HttpClient,
     public router: Router,
+    public loaderService: LoaderService,
   ) {}
   emailID: any;
   password: any;
@@ -23,6 +25,7 @@ export class Login implements OnInit {
   }
 
   login() {
+    this.loaderService.show.set(true);
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
@@ -34,16 +37,18 @@ export class Login implements OnInit {
     this.http
       .post('https://gym-five-blush.vercel.app/users/login', reqLogin, httpOptions)
       .subscribe(
-        (data :any) => {
-          if(data.token) {
+        (data: any) => {
+          if (data.token) {
             sessionStorage.setItem('token', data.token);
           }
-          if(data.refreshToken) {
+          if (data.refreshToken) {
             sessionStorage.setItem('refreshToken', data.refreshToken);
           }
-          this.router.navigate(['/newMemberList']);
+          this.loaderService.show.set(false);
+          this.router.navigate(['/home']);
         },
         (error) => {
+          this.loaderService.show.set(false);
           alert('Invalid Credentials!!');
         },
       );
@@ -51,6 +56,6 @@ export class Login implements OnInit {
 
   loginButtonClick() {
     console.log({ email: this.emailID, password: this.password });
-    this.router.navigate(['/newMemberList']);
+    this.router.navigate(['/home']);
   }
 }
