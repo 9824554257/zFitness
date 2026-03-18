@@ -1,0 +1,13 @@
+.blue-snackbar {
+  background-color: #2196f3 !important;
+  color: white; /* Optional: for text color */
+}
+
+::ng-deep .mdc-snackbar {
+  background-color: #fff;
+  border: 3px solid black;
+}
+
+.mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+  background-color: #fff !important;
+}

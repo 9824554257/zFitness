@@ -5,14 +5,17 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LoaderService } from '../loader-service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, MatSnackBarModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login implements OnInit {
+  private _snackBar = inject(MatSnackBar);
+
   constructor(
     public http: HttpClient,
     public router: Router,
@@ -22,6 +25,7 @@ export class Login implements OnInit {
   password: any;
   ngOnInit(): void {
     // this.login();
+    this._snackBar.open('Chirag here!!!!!!');
   }
 
   login() {
