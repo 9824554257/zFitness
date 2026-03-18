@@ -5,6 +5,7 @@ import { AppService } from '../app-service';
 import { SharedService } from '../shared-service';
 import { CommonModule } from '@angular/common';
 import { LoaderService } from '../loader-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-member',
@@ -55,6 +56,7 @@ export class AddMember implements OnInit {
     public sharedService: SharedService,
     public cdr: ChangeDetectorRef,
     public loaderService: LoaderService,
+    public router: Router,
   ) {}
 
   populateMemberDetailsFromResponse() {
@@ -106,7 +108,7 @@ export class AddMember implements OnInit {
     console.log(this.memberDetails);
   }
 
-  savememberDetails() {
+  savememberDetails(redirect: boolean) {
     this.loaderService.show.set(true);
     let request: any = {
       memberNo: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.memberNumber)
@@ -199,6 +201,9 @@ export class AddMember implements OnInit {
         if (!this.sharedService.checkIfValueIsEmpty(data)) {
           this.sharedService.savedMemberDataResponse.set(data['data']);
           this.loaderService.show.set(false);
+          if (redirect) {
+            this.router.navigate(['/newMemberList']);
+          }
         }
       },
       (err: any) => {
@@ -267,7 +272,7 @@ export class AddMember implements OnInit {
     }
   }
 
-  addPackage() {
+  addPackage(redirect: boolean) {
     if (!this.sharedService.checkIfValueIsEmpty(this.sharedService.savedMemberDataResponse())) {
       let request: any = {
         memberNo: this.sharedService.savedMemberDataResponse().memberNo,
@@ -300,6 +305,9 @@ export class AddMember implements OnInit {
             this.memberDetails.memberPackageDetails = [];
           }
           this.memberDetails.memberPackageDetails.push(data['data']);
+          if (redirect) {
+            this.router.navigate(['newMemberList']);
+          }
         },
         (error: any) => {},
       );
