@@ -9,10 +9,11 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { LoaderService } from '../loader-service';
+import { OnlyNumbers } from '../only-numbers';
 
 @Component({
   selector: 'app-package-master',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, OnlyNumbers],
   templateUrl: './package-master.html',
   styleUrl: './package-master.css',
 })
@@ -121,35 +122,96 @@ export class PackageMaster implements OnInit {
   }
 
   savePackageDetails() {
-    this.loaderService.show.set(true);
-    this.appService.savePackageMasterDetails(this.packageDetail).subscribe(
-      (data) => {
-        (this, this.getPackageList());
-        this.packageDetail = {
-          packageName: '',
-          fee: '',
-          duration: '',
-          remarks: '',
-        };
-        this._snackBar.open('Package Saved Succesfully.', '', {
-          horizontalPosition: this.horizontalPosition,
-          verticalPosition: this.verticalPosition,
-          duration: 3000,
-          panelClass: ['blue-snackbar'],
-        });
-        //console.log('Package Saved Succesfully.');
-      },
-      (error) => {
-        this._snackBar.open('Error in Package Save.Please try again.', '', {
-          horizontalPosition: this.horizontalPosition,
-          verticalPosition: this.verticalPosition,
-          duration: 3000,
-          panelClass: ['blue-snackbar'],
-        });
-        //console.log('Error in Package Save.');
-      },
-    );
-    console.log(this.packageDetail);
+    let isValid = true;
+    if (this.sharedService.checkIfValueIsEmpty(this.packageDetail.packageName)) {
+      isValid = false;
+      document.getElementById('packageName')?.focus();
+      this._snackBar.open('Please enter Package Name.', '', {
+        horizontalPosition: this.horizontalPosition,
+        verticalPosition: this.verticalPosition,
+        duration: 3000,
+        panelClass: ['blue-snackbar'],
+      });
+    } else if (this.sharedService.checkIfValueIsEmpty(this.packageDetail.duration)) {
+      isValid = false;
+      document.getElementById('duration')?.focus();
+      this._snackBar.open('Please enter Package Duration.', '', {
+        horizontalPosition: this.horizontalPosition,
+        verticalPosition: this.verticalPosition,
+        duration: 3000,
+        panelClass: ['blue-snackbar'],
+      });
+    } else if (this.sharedService.checkIfValueIsEmpty(this.packageDetail.fee)) {
+      isValid = false;
+      document.getElementById('fees')?.focus();
+      this._snackBar.open('Please enter Fees.', '', {
+        horizontalPosition: this.horizontalPosition,
+        verticalPosition: this.verticalPosition,
+        duration: 3000,
+        panelClass: ['blue-snackbar'],
+      });
+    }
+    // else if(this.packageDetail.){
+    //isValid=false;
+    //document.getElementById('')?.focus();
+    //   this._snackBar.open('Please enter Offer Price.', '', {
+    //       horizontalPosition: this.horizontalPosition,
+    //       verticalPosition: this.verticalPosition,
+    //       duration: 3000,
+    //       panelClass: ['blue-snackbar'],
+    //     });
+    // }
+    // else if(this.packageDetail.){
+    //isValid=false;
+    //document.getElementById('')?.focus();
+    //   this._snackBar.open('Please enter Offer Name.', '', {
+    //       horizontalPosition: this.horizontalPosition,
+    //       verticalPosition: this.verticalPosition,
+    //       duration: 3000,
+    //       panelClass: ['blue-snackbar'],
+    //     });
+    // }
+    else if (this.sharedService.checkIfValueIsEmpty(this.packageDetail.remarks)) {
+      isValid = false;
+      document.getElementById('remarks')?.focus();
+      this._snackBar.open('Please enter Remarks.', '', {
+        horizontalPosition: this.horizontalPosition,
+        verticalPosition: this.verticalPosition,
+        duration: 3000,
+        panelClass: ['blue-snackbar'],
+      });
+    }
+    if (isValid) {
+      this.loaderService.show.set(true);
+      this.appService.savePackageMasterDetails(this.packageDetail).subscribe(
+        (data) => {
+          (this, this.getPackageList());
+          this.packageDetail = {
+            packageName: '',
+            fee: '',
+            duration: '',
+            remarks: '',
+          };
+          this._snackBar.open('Package Saved Succesfully.', '', {
+            horizontalPosition: this.horizontalPosition,
+            verticalPosition: this.verticalPosition,
+            duration: 3000,
+            panelClass: ['blue-snackbar'],
+          });
+          //console.log('Package Saved Succesfully.');
+        },
+        (error) => {
+          this._snackBar.open('Error in Package Save.Please try again.', '', {
+            horizontalPosition: this.horizontalPosition,
+            verticalPosition: this.verticalPosition,
+            duration: 3000,
+            panelClass: ['blue-snackbar'],
+          });
+          //console.log('Error in Package Save.');
+        },
+      );
+      console.log(this.packageDetail);
+    }
   }
 
   getPackageList() {
