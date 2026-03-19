@@ -1,8 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppService } from '../app-service';
 import { SharedService } from '../shared-service';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+import { LoaderService } from '../loader-service';
 
 @Component({
   selector: 'app-package-master',
@@ -11,6 +17,11 @@ import { SharedService } from '../shared-service';
   styleUrl: './package-master.css',
 })
 export class PackageMaster implements OnInit {
+  private _snackBar = inject(MatSnackBar);
+
+  horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+  verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+
   packageDetails: any = {
     data: [
       {
@@ -98,10 +109,11 @@ export class PackageMaster implements OnInit {
   constructor(
     public appService: AppService,
     public sharedService: SharedService,
+    public loaderService: LoaderService,
   ) {}
 
   ngOnInit(): void {
-    //this.getPackageList();
+    this.getPackageList();
   }
 
   featureObject(data: any) {
@@ -109,25 +121,56 @@ export class PackageMaster implements OnInit {
   }
 
   savePackageDetails() {
+    this.loaderService.show.set(true);
     this.appService.savePackageMasterDetails(this.packageDetail).subscribe(
       (data) => {
-        console.log('Package Saved Succesfully.');
+        (this, this.getPackageList());
+        this.packageDetail = {
+          packageName: '',
+          fee: '',
+          duration: '',
+          remarks: '',
+        };
+        this._snackBar.open('Package Saved Succesfully.', '', {
+          horizontalPosition: this.horizontalPosition,
+          verticalPosition: this.verticalPosition,
+          duration: 3000,
+          panelClass: ['blue-snackbar'],
+        });
+        //console.log('Package Saved Succesfully.');
       },
       (error) => {
-        console.log('Error in Package Save.');
+        this._snackBar.open('Error in Package Save.Please try again.', '', {
+          horizontalPosition: this.horizontalPosition,
+          verticalPosition: this.verticalPosition,
+          duration: 3000,
+          panelClass: ['blue-snackbar'],
+        });
+        //console.log('Error in Package Save.');
       },
     );
     console.log(this.packageDetail);
   }
 
   getPackageList() {
+    this.loaderService.show.set(true);
     this.appService.getMasterPackageDetails().subscribe(
       (data: any) => {
         if (!this.sharedService.checkIfValueIsEmpty(data)) {
           this.sharedService.masterPackageDetailsList.set(data['data']);
+          this.loaderService.show.set(false);
+          //this.packageDetails = data['data'];
         }
       },
-      (error: any) => {},
+      (error: any) => {
+        this.loaderService.show.set(false);
+        this._snackBar.open('Error in Package fetch.Please try again.', '', {
+          horizontalPosition: this.horizontalPosition,
+          verticalPosition: this.verticalPosition,
+          duration: 3000,
+          panelClass: ['blue-snackbar'],
+        });
+      },
     );
   }
 }

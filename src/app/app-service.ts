@@ -53,14 +53,15 @@ export class AppService {
       headers: this.getHeaders(),
     });
 
-  updateMemberDetailsByUniqueId = (request : any) => this.http.put(`${this.baseUrl}/members/updateMemberByUniqueId`, request, {
-    headers: this.getHeaders(),
-  });
+  updateMemberDetailsByUniqueId = (request: any) =>
+    this.http.put(`${this.baseUrl}/members/updateMemberByUniqueId`, request, {
+      headers: this.getHeaders(),
+    });
 
-
-  saveMemberPackageDetails = (request : any) => this.http.post(`${this.baseUrl}/memberDetailsPackage/saveMemberPackageDetails`, request, {
-    headers: this.getHeaders(),
-  })
+  saveMemberPackageDetails = (request: any) =>
+    this.http.post(`${this.baseUrl}/memberDetailsPackage/saveMemberPackageDetails`, request, {
+      headers: this.getHeaders(),
+    });
 
   // deleteMiscData = (request: any) =>
   //   this.http.delete(`${this.baseUrl}/miscMaster/getMiscMaster`, request, {

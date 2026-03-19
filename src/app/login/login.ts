@@ -25,7 +25,6 @@ export class Login implements OnInit {
   password: any;
   ngOnInit(): void {
     // this.login();
-    this._snackBar.open('Chirag here!!!!!!');
   }
 
   login() {

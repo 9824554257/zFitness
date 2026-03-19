@@ -25,13 +25,11 @@ export class Home implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this._snackBar.open('Cannonball!!', '', {
-      horizontalPosition: this.horizontalPosition,
-      verticalPosition: this.verticalPosition,
-      duration: 3000,
-      panelClass: ['blue-snackbar'],
-    });
+    // this._snackBar.open('Cannonball!!', '', {
+    //   horizontalPosition: this.horizontalPosition,
+    //   verticalPosition: this.verticalPosition,
+    //   duration: 3000,
+    //   panelClass: ['blue-snackbar'],
+    // });
   }
-
-  //this._snackBar.open('Chirag here!!!!!!');
 }
