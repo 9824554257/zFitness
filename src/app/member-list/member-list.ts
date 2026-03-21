@@ -43,4 +43,20 @@ export class MemberList implements OnInit {
     this.router.navigate(['/newMember']);
     this.sharedService.savedMemberDataResponse.set(member);
   }
+
+  deleteMember(member : any) {
+    this.loaderService.show.set(true);
+    this.appService.deleteMemberDetails(member._id).subscribe((data : any) => {
+      this.loaderService.show.set(false);
+      // let deltedIndex : any = this.sharedService.memberDetails().findIndex((singleObj : any) => singleObj._id === member._id);
+      // if(deltedIndex !== -1) {
+        this.sharedService.memberDetails.set(
+          this.sharedService.memberDetails().filter((item: any) => item._id !== member._id)
+        );
+        // this.cdr.detectChanges();
+      // }
+    }, (err : any) => {
+      this.loaderService.show.set(false);
+    })
+  }
 }

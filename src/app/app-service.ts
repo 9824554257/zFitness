@@ -63,6 +63,16 @@ export class AppService {
       headers: this.getHeaders(),
     });
 
+  deleteMemberPackage = (packageId: any) =>
+    this.http.delete(`${this.baseUrl}/memberDetailsPackage/deleteMemberPackageDetail?packageId=${packageId}`, {
+      headers: this.getHeaders(),
+    });
+
+  deleteMemberDetails = (memberId: any) =>
+    this.http.delete(`${this.baseUrl}/members/deleteMemberDetail?memberId=${memberId}`, {
+      headers: this.getHeaders(),
+    });
+
   // deleteMiscData = (request: any) =>
   //   this.http.delete(`${this.baseUrl}/miscMaster/getMiscMaster`, request, {
   //     headers: this.getHeaders(),
