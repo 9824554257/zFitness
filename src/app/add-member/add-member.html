@@ -371,10 +371,15 @@
                   <table id="basicExample" class="table m-0 align-middle">
                     <thead>
                       <tr>
-                        <!-- <th>#</th> -->
-                        <th>Name</th>
-                        <th>duration</th>
-                        <th>fee</th>
+                        <th>Package Name</th>
+                        <th>Fee</th>
+                        <th>Discounted Price</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Remarks</th>
+                        <!-- <th>Created User</th>
+                        <th>Master Package ID</th> -->
+                        <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -383,23 +388,21 @@
                         track singlePackage._id
                       ) {
                         <tr>
-                          <!-- <td>001</td> -->
-                          <td>
-                            <!-- <img
-                              src="assets/images/user.png"
-                              class="img-shadow img-2x rounded-5 me-1"
-                              alt="Fitness Dashboard"
-                            /> -->
-                            {{ singlePackage.packageName }}
-                          </td>
-                          <td>{{ singlePackage.duration }}</td>
+                          <td>{{ singlePackage.packageName }}</td>
                           <td>{{ singlePackage.fee }}</td>
+                          <td>{{ singlePackage.discountedPrice }}</td>
+                          <td>{{ singlePackage.startDate | date:'yyyy-MM-dd' }}</td>
+                          <td>{{ singlePackage.endDate | date:'yyyy-MM-dd' }}</td>
+                          <td>{{ singlePackage.remarks }}</td>
+                          <!-- <td>{{ singlePackage.createdUser }}</td>
+                          <td>{{ singlePackage.masterPackageId }}</td> -->
                           <td>
                             <div class="d-inline-flex gap-1">
                               <button
                                 class="btn btn-outline-danger btn-sm"
                                 data-bs-toggle="modal"
                                 data-bs-target="#delRow"
+                                (click)="deletePackage(singlePackage)"
                               >
                                 <i class="ri-delete-bin-line"></i>
                               </button>

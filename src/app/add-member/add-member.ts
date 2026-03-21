@@ -466,11 +466,26 @@ export class AddMember implements OnInit {
           this.memberDetails.memberPackageDetails = [];
         }
         this.memberDetails.memberPackageDetails.push(data['data']);
+        this.cdr.detectChanges();
         if (redirect) {
           this.router.navigate(['newMemberList']);
         }
       },
       (error: any) => {},
     );
+  }
+
+  deletePackage(singlePackage : any) {
+    this.loaderService.show.set(true);
+    this.appService.deleteMemberPackage(singlePackage._id).subscribe((data : any) => {
+      this.loaderService.show.set(false);
+      let deltedIndex : any = this.memberDetails.memberPackageDetails.findIndex((singleObj : any) => singleObj._id === singlePackage._id);
+      if(deltedIndex !== -1) {
+        this.memberDetails.memberPackageDetails.splice(deltedIndex, 1);
+        this.cdr.detectChanges();
+      }
+    }, (err : any) => {
+      this.loaderService.show.set(false);
+    })
   }
 }
