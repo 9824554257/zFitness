@@ -332,6 +332,43 @@ export class AddMember implements OnInit {
             if (redirect) {
               this.router.navigate(['/newMemberList']);
             }
+            this.sharedService.snackBar.open('Member details saved successfully.');
+            this.memberDetails = {
+              memberNumber: '',
+              fullName: '',
+              emailAddress: '',
+              mobileNumber: '',
+              dateOfBirth: '',
+              inquiryDate: '',
+              occupation: '',
+              packageType: '',
+              joinDate: '',
+              dueDate: '',
+              remarks: '',
+              gender: '',
+              period: '',
+              personalTrainer: '',
+              ptAmount: '',
+              age: '',
+              maritalStatus: '',
+              address: '',
+              shiftType: '',
+              time: '',
+              joinWeight: '',
+              paidDate: '',
+              packageDetails: {
+                packageName: '',
+                period: '',
+                startDate: '',
+                endDate: '',
+                amount: '',
+              },
+              ptDetails: {
+                ptName: '',
+                ptPeriod: '',
+                amount: '',
+              },
+            };
           }
         },
         (err: any) => {
