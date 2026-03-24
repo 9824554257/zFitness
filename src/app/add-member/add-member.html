@@ -44,7 +44,7 @@
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a2">Email <span class="text-danger">*</span></label>
+                <label class="form-label" for="a2">Email</label>
                 <input
                   type="email"
                   class="form-control"
@@ -59,7 +59,7 @@
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a3"
-                  >Mobile Number<span class="text-danger">*</span></label
+                  >Mobile Number</label
                 >
                 <input
                   type="email"
@@ -94,7 +94,7 @@
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a6">Occupation</label>
+                <label class="form-label" for="a6">Occupation <span class="text-danger">*</span></label>
                 <select
                   class="form-select"
                   id="occupation"
@@ -110,7 +110,7 @@
 
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Join Date</label>
+                <label class="form-label" for="a5">Join Date <span class="text-danger">*</span></label>
                 <input
                   type="date"
                   class="form-control"
@@ -133,7 +133,7 @@
                       class="form-check-input"
                       type="radio"
                       name="selectGenderOptions"
-                      id="gender"
+                      id="selectGender1"
                       [(ngModel)]="memberDetails.gender"
                       value="Male"
                     />
@@ -145,6 +145,7 @@
                       type="radio"
                       name="selectGenderOptions"
                       id="selectGender2"
+                      [(ngModel)]="memberDetails.gender"
                       value="Female"
                     />
                     <label class="form-check-label" for="selectGender2">Female</label>
@@ -155,7 +156,7 @@
 
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Age</label>
+                <label class="form-label" for="a5">Age <span class="text-danger">*</span> </label>
                 <input
                   type="remarks"
                   class="form-control"
@@ -168,7 +169,7 @@
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Marital Status</label>
+                <label class="form-label" for="a5">Marital Status <span class="text-danger">*</span></label>
                 <select
                   class="form-select"
                   id="maritalStatus"
@@ -183,7 +184,7 @@
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Address</label>
+                <label class="form-label" for="a5">Address <span class="text-danger">*</span></label>
                 <input
                   type="remarks"
                   class="form-control"
@@ -197,7 +198,7 @@
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Shift Type</label>
+                <label class="form-label" for="a5">Shift Type <span class="text-danger">*</span></label>
                 <select
                   class="form-select"
                   id="shiftType"
@@ -213,7 +214,7 @@
 
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Join Weight</label>
+                <label class="form-label" for="a5">Join Weight <span class="text-danger">*</span></label>
                 <input
                   type="number"
                   class="form-control"
