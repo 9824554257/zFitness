@@ -62,11 +62,11 @@ export class AddMember implements OnInit {
     public router: Router,
     private datePipe: DatePipe,
   ) {
-      const today = new Date();
-      this.maxDate = today.toISOString().split('T')[0];
-      const pastDate = new Date();
-      pastDate.setFullYear(today.getFullYear() - 150);
-      this.minDate = pastDate.toISOString().split('T')[0];
+    const today = new Date();
+    this.maxDate = today.toISOString().split('T')[0];
+    const pastDate = new Date();
+    pastDate.setFullYear(today.getFullYear() - 150);
+    this.minDate = pastDate.toISOString().split('T')[0];
   }
 
   private formatDateForNgModel(dateValue: any): string {
@@ -121,7 +121,6 @@ export class AddMember implements OnInit {
 
       this.validateDOB();
     }
-
   }
 
   ngOnInit(): void {
@@ -151,26 +150,25 @@ export class AddMember implements OnInit {
       const today = new Date();
       let age = today.getFullYear() - selected.getFullYear();
       const monthDiff = today.getMonth() - selected.getMonth();
-      
+
       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < selected.getDate())) {
         age--;
       }
-      
+
       this.memberDetails.age = age;
     }
   }
-
 
   validateEmail() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (this.memberDetails.emailAddress && !emailRegex.test(this.memberDetails.emailAddress)) {
       this.sharedService.snackBar.open('Invalid email.');
-      this.memberDetails.emailAddress = ''; 
+      this.memberDetails.emailAddress = '';
     }
   }
 
   validateMobileNumber() {
-    const mobileRegex = /^[6-9]\d{9}$/; 
+    const mobileRegex = /^[6-9]\d{9}$/;
     if (this.memberDetails.mobileNumber && !mobileRegex.test(this.memberDetails.mobileNumber)) {
       this.sharedService.snackBar.open('Invalid mobile number.');
       this.memberDetails.mobileNumber = '';
@@ -178,67 +176,67 @@ export class AddMember implements OnInit {
   }
 
   savememberDetails(redirect: boolean) {
-
-    let isValid : any = true;
-    let validationArray : any = [
+    let isValid: any = true;
+    let validationArray: any = [
       {
-        ngModelValue : 'memberNumber',
-        requiredMessage : 'Member number is mandatory'
+        ngModelValue: 'memberNumber',
+        requiredMessage: 'Member number is mandatory',
       },
       {
-        ngModelValue : 'fullName',
-        requiredMessage : 'Member full name is mandatory'
+        ngModelValue: 'fullName',
+        requiredMessage: 'Member full name is mandatory',
       },
       {
-        ngModelValue : 'emailAddress',
-        requiredMessage : 'Member email is mandatory'
+        ngModelValue: 'emailAddress',
+        requiredMessage: 'Member email is mandatory',
       },
       {
-        ngModelValue : 'mobileNumber',
-        requiredMessage : 'Member mobile number is mandatory'
+        ngModelValue: 'mobileNumber',
+        requiredMessage: 'Member mobile number is mandatory',
       },
       {
-        ngModelValue : 'dateOfBirth',
-        requiredMessage : 'Member date of birth is mandatory'
+        ngModelValue: 'dateOfBirth',
+        requiredMessage: 'Member date of birth is mandatory',
       },
       {
-        ngModelValue : 'occupation',
-        requiredMessage : 'Member occupation is mandatory'
+        ngModelValue: 'occupation',
+        requiredMessage: 'Member occupation is mandatory',
       },
       {
-        ngModelValue : 'joinDate',
-        requiredMessage : 'Member joining date is mandatory'
+        ngModelValue: 'joinDate',
+        requiredMessage: 'Member joining date is mandatory',
       },
       {
-        ngModelValue : 'gender',
-        requiredMessage : 'Member gender is mandatory'
+        ngModelValue: 'gender',
+        requiredMessage: 'Member gender is mandatory',
       },
       {
-        ngModelValue : 'maritalStatus',
-        requiredMessage : 'Marital Status is mandatory'
+        ngModelValue: 'maritalStatus',
+        requiredMessage: 'Marital Status is mandatory',
       },
       {
-        ngModelValue : 'address',
-        requiredMessage : 'Address is mandatory'
+        ngModelValue: 'address',
+        requiredMessage: 'Address is mandatory',
       },
       {
-        ngModelValue : 'shiftType',
-        requiredMessage : 'Shift Type is mandatory'
+        ngModelValue: 'shiftType',
+        requiredMessage: 'Shift Type is mandatory',
       },
       {
-        ngModelValue : 'joinWeight',
-        requiredMessage : 'Member joining weight is mandatory'
-      }
-
+        ngModelValue: 'joinWeight',
+        requiredMessage: 'Member joining weight is mandatory',
+      },
     ];
 
-    validationArray.forEach((singleObj :any) => {
-      if(this.sharedService.checkIfValueIsEmpty(this.memberDetails[singleObj['ngModelValue']]) && isValid) {
+    validationArray.forEach((singleObj: any) => {
+      if (
+        this.sharedService.checkIfValueIsEmpty(this.memberDetails[singleObj['ngModelValue']]) &&
+        isValid
+      ) {
         this.sharedService.snackBar.open(singleObj['requiredMessage']);
         isValid = false;
       }
     });
-
 
     if (isValid) {
       this.loaderService.show.set(true);
@@ -327,12 +325,8 @@ export class AddMember implements OnInit {
       ](request).subscribe(
         (data: any) => {
           if (!this.sharedService.checkIfValueIsEmpty(data)) {
-            this.sharedService.savedMemberDataResponse.set(data['data']);
+            this.sharedService.savedMemberDataResponse.set([]);
             this.loaderService.show.set(false);
-            if (redirect) {
-              this.router.navigate(['/newMemberList']);
-            }
-            this.sharedService.snackBar.open('Member details saved successfully.');
             this.memberDetails = {
               memberNumber: '',
               fullName: '',
@@ -369,6 +363,10 @@ export class AddMember implements OnInit {
                 amount: '',
               },
             };
+            if (redirect) {
+              this.router.navigate(['/newMemberList']);
+            }
+            this.sharedService.snackBar.open('Member details saved successfully.');
           }
         },
         (err: any) => {
@@ -376,7 +374,6 @@ export class AddMember implements OnInit {
         },
       );
     }
-    
   }
 
   fetchPackageDetails() {
@@ -462,7 +459,10 @@ export class AddMember implements OnInit {
     ];
 
     validationArray.forEach((singleObj: any) => {
-      if (this.sharedService.checkIfValueIsEmpty(this.memberDetails[singleObj['ngModelValue']]) && isValid) {
+      if (
+        this.sharedService.checkIfValueIsEmpty(this.memberDetails[singleObj['ngModelValue']]) &&
+        isValid
+      ) {
         this.sharedService.snackBar.open(singleObj['requiredMessage']);
         isValid = false;
       }
@@ -512,17 +512,22 @@ export class AddMember implements OnInit {
     );
   }
 
-  deletePackage(singlePackage : any) {
+  deletePackage(singlePackage: any) {
     this.loaderService.show.set(true);
-    this.appService.deleteMemberPackage(singlePackage._id).subscribe((data : any) => {
-      this.loaderService.show.set(false);
-      let deltedIndex : any = this.memberDetails.memberPackageDetails.findIndex((singleObj : any) => singleObj._id === singlePackage._id);
-      if(deltedIndex !== -1) {
-        this.memberDetails.memberPackageDetails.splice(deltedIndex, 1);
-        this.cdr.detectChanges();
-      }
-    }, (err : any) => {
-      this.loaderService.show.set(false);
-    })
+    this.appService.deleteMemberPackage(singlePackage._id).subscribe(
+      (data: any) => {
+        this.loaderService.show.set(false);
+        let deltedIndex: any = this.memberDetails.memberPackageDetails.findIndex(
+          (singleObj: any) => singleObj._id === singlePackage._id,
+        );
+        if (deltedIndex !== -1) {
+          this.memberDetails.memberPackageDetails.splice(deltedIndex, 1);
+          this.cdr.detectChanges();
+        }
+      },
+      (err: any) => {
+        this.loaderService.show.set(false);
+      },
+    );
   }
 }
