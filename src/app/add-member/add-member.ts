@@ -326,9 +326,9 @@ export class AddMember implements OnInit {
         (data: any) => {
           if (!this.sharedService.checkIfValueIsEmpty(data)) {
             this.loaderService.show.set(false);
+            this.sharedService.savedMemberDataResponse.set(data['data']);
             
             if (redirect) {
-              this.sharedService.savedMemberDataResponse.set([]);
               this.memberDetails = {
                 memberNumber: '',
                 fullName: '',
