@@ -186,14 +186,14 @@ export class AddMember implements OnInit {
         ngModelValue: 'fullName',
         requiredMessage: 'Member full name is mandatory',
       },
-      {
-        ngModelValue: 'emailAddress',
-        requiredMessage: 'Member email is mandatory',
-      },
-      {
-        ngModelValue: 'mobileNumber',
-        requiredMessage: 'Member mobile number is mandatory',
-      },
+      // {
+      //   ngModelValue: 'emailAddress',
+      //   requiredMessage: 'Member email is mandatory',
+      // },
+      // {
+      //   ngModelValue: 'mobileNumber',
+      //   requiredMessage: 'Member mobile number is mandatory',
+      // },
       {
         ngModelValue: 'dateOfBirth',
         requiredMessage: 'Member date of birth is mandatory',
@@ -325,45 +325,46 @@ export class AddMember implements OnInit {
       ](request).subscribe(
         (data: any) => {
           if (!this.sharedService.checkIfValueIsEmpty(data)) {
-            this.sharedService.savedMemberDataResponse.set([]);
             this.loaderService.show.set(false);
-            this.memberDetails = {
-              memberNumber: '',
-              fullName: '',
-              emailAddress: '',
-              mobileNumber: '',
-              dateOfBirth: '',
-              inquiryDate: '',
-              occupation: '',
-              packageType: '',
-              joinDate: '',
-              dueDate: '',
-              remarks: '',
-              gender: '',
-              period: '',
-              personalTrainer: '',
-              ptAmount: '',
-              age: '',
-              maritalStatus: '',
-              address: '',
-              shiftType: '',
-              time: '',
-              joinWeight: '',
-              paidDate: '',
-              packageDetails: {
-                packageName: '',
-                period: '',
-                startDate: '',
-                endDate: '',
-                amount: '',
-              },
-              ptDetails: {
-                ptName: '',
-                ptPeriod: '',
-                amount: '',
-              },
-            };
+            
             if (redirect) {
+              this.sharedService.savedMemberDataResponse.set([]);
+              this.memberDetails = {
+                memberNumber: '',
+                fullName: '',
+                emailAddress: '',
+                mobileNumber: '',
+                dateOfBirth: '',
+                inquiryDate: '',
+                occupation: '',
+                packageType: '',
+                joinDate: '',
+                dueDate: '',
+                remarks: '',
+                gender: '',
+                period: '',
+                personalTrainer: '',
+                ptAmount: '',
+                age: '',
+                maritalStatus: '',
+                address: '',
+                shiftType: '',
+                time: '',
+                joinWeight: '',
+                paidDate: '',
+                packageDetails: {
+                  packageName: '',
+                  period: '',
+                  startDate: '',
+                  endDate: '',
+                  amount: '',
+                },
+                ptDetails: {
+                  ptName: '',
+                  ptPeriod: '',
+                  amount: '',
+                },
+              };
               this.router.navigate(['/newMemberList']);
             }
             this.sharedService.snackBar.open('Member details saved successfully.');
