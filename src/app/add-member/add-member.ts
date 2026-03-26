@@ -365,6 +365,7 @@ export class AddMember implements OnInit {
                   amount: '',
                 },
               };
+              this.sharedService.savedMemberDataResponse.set([]);
               this.router.navigate(['/newMemberList']);
             }
             this.sharedService.snackBar.open('Member details saved successfully.');
