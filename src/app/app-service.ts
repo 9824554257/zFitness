@@ -63,6 +63,21 @@ export class AppService {
       headers: this.getHeaders(),
     });
 
+  saveMemberTrainerDetails = (request: any) =>
+    this.http.post(`${this.baseUrl}/memberTrainerDetails/saveMemberTrainerDetils`, request, {
+      headers: this.getHeaders(),
+    });
+
+  updateMemberTrainerByUniqueId = (request: any) =>
+    this.http.put(`${this.baseUrl}/memberTrainerDetails/updateMemberTrainerByUniqueId`, request, {
+      headers: this.getHeaders(),
+    });
+
+  deleteMemberTrainer = (trainerId: any) =>
+    this.http.delete(`${this.baseUrl}/memberTrainerDetails/deleteMemberTrainerDetils?memberTrainerId=${trainerId}`, {
+      headers: this.getHeaders(),
+    });
+
   deleteMemberPackage = (packageId: any) =>
     this.http.delete(`${this.baseUrl}/memberDetailsPackage/deleteMemberPackageDetail?packageId=${packageId}`, {
       headers: this.getHeaders(),
@@ -72,10 +87,5 @@ export class AppService {
     this.http.delete(`${this.baseUrl}/members/deleteMemberDetail?memberId=${memberId}`, {
       headers: this.getHeaders(),
     });
-
-  // deleteMiscData = (request: any) =>
-  //   this.http.delete(`${this.baseUrl}/miscMaster/getMiscMaster`, request, {
-  //     headers: this.getHeaders(),
-  //   });
-  //Misc master API Ends
+  
 }
