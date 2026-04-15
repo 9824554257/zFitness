@@ -44,7 +44,7 @@
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a2">Email <span class="text-danger">*</span></label>
+                <label class="form-label" for="a2">Email</label>
                 <input
                   type="email"
                   class="form-control"
@@ -59,7 +59,7 @@
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a3"
-                  >Mobile Number<span class="text-danger">*</span></label
+                  >Mobile Number</label
                 >
                 <input
                   type="email"
@@ -94,7 +94,7 @@
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a6">Occupation</label>
+                <label class="form-label" for="a6">Occupation <span class="text-danger">*</span></label>
                 <select
                   class="form-select"
                   id="occupation"
@@ -110,7 +110,7 @@
 
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Join Date</label>
+                <label class="form-label" for="a5">Join Date <span class="text-danger">*</span></label>
                 <input
                   type="date"
                   class="form-control"
@@ -133,7 +133,7 @@
                       class="form-check-input"
                       type="radio"
                       name="selectGenderOptions"
-                      id="gender"
+                      id="selectGender1"
                       [(ngModel)]="memberDetails.gender"
                       value="Male"
                     />
@@ -145,6 +145,7 @@
                       type="radio"
                       name="selectGenderOptions"
                       id="selectGender2"
+                      [(ngModel)]="memberDetails.gender"
                       value="Female"
                     />
                     <label class="form-check-label" for="selectGender2">Female</label>
@@ -155,7 +156,7 @@
 
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Age</label>
+                <label class="form-label" for="a5">Age <span class="text-danger">*</span> </label>
                 <input
                   type="remarks"
                   class="form-control"
@@ -168,7 +169,7 @@
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Marital Status</label>
+                <label class="form-label" for="a5">Marital Status <span class="text-danger">*</span></label>
                 <select
                   class="form-select"
                   id="maritalStatus"
@@ -183,7 +184,7 @@
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Address</label>
+                <label class="form-label" for="a5">Address <span class="text-danger">*</span></label>
                 <input
                   type="remarks"
                   class="form-control"
@@ -197,7 +198,7 @@
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Shift Type</label>
+                <label class="form-label" for="a5">Shift Type <span class="text-danger">*</span></label>
                 <select
                   class="form-select"
                   id="shiftType"
@@ -213,7 +214,7 @@
 
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
-                <label class="form-label" for="a5">Join Weight</label>
+                <label class="form-label" for="a5">Join Weight <span class="text-danger">*</span></label>
                 <input
                   type="number"
                   class="form-control"
@@ -513,13 +514,124 @@
                 />
               </div>
             </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1"
+                  >Start Date<span class="text-danger">*</span></label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="startDate"
+                  name="startDate"
+                  [(ngModel)]="memberDetails.ptDetails.startDate"
+                  placeholder="Enter Start Date"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a1"
+                  >End Date<span class="text-danger">*</span></label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="endDate"
+                  name="endDate"
+                  [(ngModel)]="memberDetails.ptDetails.endDate"
+                  placeholder="Enter End Date"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="a5">Remarks</label>
+                <input
+                  type="remarks"
+                  class="form-control"
+                  id="remarks"
+                  name="remarks"
+                  [(ngModel)]="memberDetails.ptDetails.remarks"
+                  placeholder="Enter Remarks"
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div class="card-footer border-top">
           <div class="col-sm-12">
             <div class="d-flex gap-2 justify-content-end">
-              <button type="button" class="btn btn-primary">Add PT</button>
-              <button type="button" class="btn btn-primary">Add PT & Redirect</button>
+              <button type="button" class="btn btn-primary" (click)="savePtDetails(false)">
+                {{ memberDetails.ptDetails.uniqueId ? 'Update PT' : 'Add PT' }}
+              </button>
+              <button type="button" class="btn btn-primary" (click)="savePtDetails(true)">
+                {{ memberDetails.ptDetails.uniqueId ? 'Update PT & Redirect' : 'Add PT & Redirect' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row gx-4 mt-2">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title">PT List</h5>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table id="ptListTable" class="table m-0 align-middle">
+                    <thead>
+                      <tr>
+                        <th>PT Name</th>
+                        <th>Duration</th>
+                        <th>Amount</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Remarks</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (
+                        singlePt of memberDetails.memberTrainerDetails;
+                        track singlePt._id
+                      ) {
+                        <tr>
+                          <td>{{ singlePt.ptName }}</td>
+                          <td>{{ singlePt.duration }}</td>
+                          <td>{{ singlePt.amount }}</td>
+                          <td>{{ singlePt.startDate | date:'yyyy-MM-dd' }}</td>
+                          <td>{{ singlePt.endDate | date:'yyyy-MM-dd' }}</td>
+                          <td>{{ singlePt.remarks }}</td>
+                          <td>
+                            <div class="d-inline-flex gap-1">
+                              <button
+                                class="btn btn-outline-success btn-sm"
+                                type="button"
+                                (click)="editPtDetails(singlePt)"
+                              >
+                                <i class="ri-edit-box-line"></i>
+                              </button>
+                              <button
+                                class="btn btn-outline-danger btn-sm"
+                                type="button"
+                                (click)="deletePtDetails(singlePt)"
+                              >
+                                <i class="ri-delete-bin-line"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      } @empty {
+                        <tr>
+                          <td colspan="100%">No PT details added</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>

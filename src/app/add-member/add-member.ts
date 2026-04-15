@@ -47,10 +47,16 @@ export class AddMember implements OnInit {
       endDate: '',
       amount: '',
     },
+    memberPackageDetails: [],
+    memberTrainerDetails: [],
     ptDetails: {
+      uniqueId: '',
       ptName: '',
       ptPeriod: '',
       amount: '',
+      startDate: '',
+      endDate: '',
+      remarks: '',
     },
   };
 
@@ -117,7 +123,9 @@ export class AddMember implements OnInit {
         this.sharedService.savedMemberDataResponse().paidDate,
       );
       this.memberDetails.memberPackageDetails =
-        this.sharedService.savedMemberDataResponse().memberPackageDetails;
+        this.sharedService.savedMemberDataResponse().memberPackageDetails || [];
+      this.memberDetails.memberTrainerDetails =
+        this.sharedService.savedMemberDataResponse().memberTrainerDetails || [];
 
       this.validateDOB();
     }
@@ -186,14 +194,14 @@ export class AddMember implements OnInit {
         ngModelValue: 'fullName',
         requiredMessage: 'Member full name is mandatory',
       },
-      {
-        ngModelValue: 'emailAddress',
-        requiredMessage: 'Member email is mandatory',
-      },
-      {
-        ngModelValue: 'mobileNumber',
-        requiredMessage: 'Member mobile number is mandatory',
-      },
+      // {
+      //   ngModelValue: 'emailAddress',
+      //   requiredMessage: 'Member email is mandatory',
+      // },
+      // {
+      //   ngModelValue: 'mobileNumber',
+      //   requiredMessage: 'Member mobile number is mandatory',
+      // },
       {
         ngModelValue: 'dateOfBirth',
         requiredMessage: 'Member date of birth is mandatory',
@@ -325,45 +333,47 @@ export class AddMember implements OnInit {
       ](request).subscribe(
         (data: any) => {
           if (!this.sharedService.checkIfValueIsEmpty(data)) {
-            this.sharedService.savedMemberDataResponse.set([]);
             this.loaderService.show.set(false);
-            this.memberDetails = {
-              memberNumber: '',
-              fullName: '',
-              emailAddress: '',
-              mobileNumber: '',
-              dateOfBirth: '',
-              inquiryDate: '',
-              occupation: '',
-              packageType: '',
-              joinDate: '',
-              dueDate: '',
-              remarks: '',
-              gender: '',
-              period: '',
-              personalTrainer: '',
-              ptAmount: '',
-              age: '',
-              maritalStatus: '',
-              address: '',
-              shiftType: '',
-              time: '',
-              joinWeight: '',
-              paidDate: '',
-              packageDetails: {
-                packageName: '',
-                period: '',
-                startDate: '',
-                endDate: '',
-                amount: '',
-              },
-              ptDetails: {
-                ptName: '',
-                ptPeriod: '',
-                amount: '',
-              },
-            };
+            this.sharedService.savedMemberDataResponse.set(data['data']);
+            
             if (redirect) {
+              this.memberDetails = {
+                memberNumber: '',
+                fullName: '',
+                emailAddress: '',
+                mobileNumber: '',
+                dateOfBirth: '',
+                inquiryDate: '',
+                occupation: '',
+                packageType: '',
+                joinDate: '',
+                dueDate: '',
+                remarks: '',
+                gender: '',
+                period: '',
+                personalTrainer: '',
+                ptAmount: '',
+                age: '',
+                maritalStatus: '',
+                address: '',
+                shiftType: '',
+                time: '',
+                joinWeight: '',
+                paidDate: '',
+                packageDetails: {
+                  packageName: '',
+                  period: '',
+                  startDate: '',
+                  endDate: '',
+                  amount: '',
+                },
+                ptDetails: {
+                  ptName: '',
+                  ptPeriod: '',
+                  amount: '',
+                },
+              };
+              this.sharedService.savedMemberDataResponse.set([]);
               this.router.navigate(['/newMemberList']);
             }
             this.sharedService.snackBar.open('Member details saved successfully.');
@@ -509,6 +519,162 @@ export class AddMember implements OnInit {
         }
       },
       (error: any) => {},
+    );
+  }
+
+  resetPtDetailsForm() {
+    this.memberDetails.ptDetails = {
+      uniqueId: '',
+      ptName: '',
+      ptPeriod: '',
+      amount: '',
+      startDate: '',
+      endDate: '',
+      remarks: '',
+    };
+  }
+
+  savePtDetails(redirect: boolean) {
+    if (this.sharedService.checkIfValueIsEmpty(this.sharedService.savedMemberDataResponse())) {
+      this.sharedService.snackBar.open('Please save member details first.');
+      return;
+    }
+
+    let isValid: any = true;
+    const validationArray: any = [
+      {
+        ngModelValue: 'ptName',
+        requiredMessage: 'PT Name is mandatory.',
+      },
+      {
+        ngModelValue: 'ptPeriod',
+        requiredMessage: 'PT Period is mandatory.',
+      },
+      {
+        ngModelValue: 'amount',
+        requiredMessage: 'PT amount is mandatory.',
+      },
+      {
+        ngModelValue: 'startDate',
+        requiredMessage: 'PT start date is mandatory.',
+      },
+      {
+        ngModelValue: 'endDate',
+        requiredMessage: 'PT end date is mandatory.',
+      },
+    ];
+
+    validationArray.forEach((singleObj: any) => {
+      if (
+        this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails[singleObj['ngModelValue']]) &&
+        isValid
+      ) {
+        this.sharedService.snackBar.open(singleObj['requiredMessage']);
+        isValid = false;
+      }
+    });
+
+    if (!isValid) {
+      return;
+    }
+
+    let request: any = {
+      memberNo: this.sharedService.savedMemberDataResponse().memberNo,
+      memberID: this.sharedService.savedMemberDataResponse()._id,
+      duration: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails.ptPeriod)
+        ? this.memberDetails.ptDetails.ptPeriod
+        : null,
+      startDate: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails.startDate)
+        ? this.datePipe.transform(new Date(this.memberDetails.ptDetails.startDate), 'yyyy-MM-dd')
+        : null,
+      endDate: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails.endDate)
+        ? this.datePipe.transform(new Date(this.memberDetails.ptDetails.endDate), 'yyyy-MM-dd')
+        : null,
+      remarks: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails.remarks)
+        ? this.memberDetails.ptDetails.remarks
+        : '',
+      amount: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails.amount)
+        ? this.memberDetails.ptDetails.amount
+        : null,
+      ptName: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails.ptName)
+        ? this.memberDetails.ptDetails.ptName
+        : '',
+    };
+
+    if (!this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails.uniqueId)) {
+      request['uniqueId'] = this.memberDetails.ptDetails.uniqueId;
+    }
+
+    const apiCall = !this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails.uniqueId)
+      ? this.appService.updateMemberTrainerByUniqueId(request)
+      : this.appService.saveMemberTrainerDetails(request);
+
+    this.loaderService.show.set(true);
+    apiCall.subscribe(
+      (data: any) => {
+        this.loaderService.show.set(false);
+        if (this.sharedService.checkIfValueIsEmpty(data)) {
+          return;
+        }
+
+        const response = data['data'];
+        if (this.sharedService.checkIfValueIsEmpty(this.memberDetails.memberTrainerDetails)) {
+          this.memberDetails.memberTrainerDetails = [];
+        }
+
+        if (!this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails.uniqueId)) {
+          const index = this.memberDetails.memberTrainerDetails.findIndex(
+            (item: any) => item._id === this.memberDetails.ptDetails.uniqueId,
+          );
+          if (index !== -1) {
+            this.memberDetails.memberTrainerDetails[index] = response;
+          } else {
+            this.memberDetails.memberTrainerDetails.push(response);
+          }
+        } else {
+          this.memberDetails.memberTrainerDetails.push(response);
+        }
+
+        this.resetPtDetailsForm();
+        this.cdr.detectChanges();
+        if (redirect) {
+          this.router.navigate(['newMemberList']);
+        }
+      },
+      (error: any) => {
+        this.loaderService.show.set(false);
+      },
+    );
+  }
+
+  editPtDetails(singlePt: any) {
+    this.memberDetails.ptDetails = {
+      uniqueId: singlePt._id,
+      ptName: singlePt.ptName || '',
+      ptPeriod: singlePt.duration || '',
+      amount: singlePt.amount || '',
+      startDate: this.formatDateForNgModel(singlePt.startDate),
+      endDate: this.formatDateForNgModel(singlePt.endDate),
+      remarks: singlePt.remarks || '',
+    };
+  }
+
+  deletePtDetails(singlePt: any) {
+    this.loaderService.show.set(true);
+    this.appService.deleteMemberTrainer(singlePt._id).subscribe(
+      (data: any) => {
+        this.loaderService.show.set(false);
+        const deletedIndex: any = this.memberDetails.memberTrainerDetails.findIndex(
+          (item: any) => item._id === singlePt._id,
+        );
+        if (deletedIndex !== -1) {
+          this.memberDetails.memberTrainerDetails.splice(deletedIndex, 1);
+          this.cdr.detectChanges();
+        }
+      },
+      (err: any) => {
+        this.loaderService.show.set(false);
+      },
     );
   }
 
