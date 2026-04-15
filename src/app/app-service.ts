@@ -64,9 +64,12 @@ export class AppService {
     });
 
   deleteMemberPackage = (packageId: any) =>
-    this.http.delete(`${this.baseUrl}/memberDetailsPackage/deleteMemberPackageDetail?packageId=${packageId}`, {
-      headers: this.getHeaders(),
-    });
+    this.http.delete(
+      `${this.baseUrl}/memberDetailsPackage/deleteMemberPackageDetail?packageId=${packageId}`,
+      {
+        headers: this.getHeaders(),
+      },
+    );
 
   deleteMemberDetails = (memberId: any) =>
     this.http.delete(`${this.baseUrl}/members/deleteMemberDetail?memberId=${memberId}`, {
@@ -78,4 +81,21 @@ export class AppService {
   //     headers: this.getHeaders(),
   //   });
   //Misc master API Ends
+
+  //inquiry/getAllInquiryDetails
+  //inquiry/saveInquiryDetails
+  //inquiry/updateInquiryByInquiryId
+
+  getAllInquiryDetails = () =>
+    this.http.get(`${this.baseUrl}/inquiry/getAllInquiryDetails`, { headers: this.getHeaders() });
+
+  saveInquiryDetails = (request: any) =>
+    this.http.post(`${this.baseUrl}/inquiry/saveInquiryDetails`, request, {
+      headers: this.getHeaders(),
+    });
+
+  updateInquiryDetails = (request: any) =>
+    this.http.put(`${this.baseUrl}/inquiry/updateInquiryByInquiryId`, request, {
+      headers: this.getHeaders(),
+    });
 }

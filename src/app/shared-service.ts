@@ -7,11 +7,17 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 export class SharedService {
   masterPackageDetailsList = signal<any[]>([]);
   memberDetails = signal<any[]>([]);
+  inquiryDetails = signal<any[]>([]);
   savedMemberDataResponse = signal<any>({});
+  savedInquiryDataResponse = signal<any>({});
   snackBar = inject(MatSnackBar);
 
-  constructor() { }
-  checkIfValueIsEmpty = (value: any) => value === '' || value === null || value === undefined || (typeof value === 'object' && Object.keys(value).length === 0);
+  constructor() {}
+  checkIfValueIsEmpty = (value: any) =>
+    value === '' ||
+    value === null ||
+    value === undefined ||
+    (typeof value === 'object' && Object.keys(value).length === 0);
   isLogInPage = () => {
     return window.location.pathname === '/' || window.location.pathname === '/login'; //window.location.href.includes('login');
   }; //return false; //window.location.href.includes('login');
@@ -24,7 +30,5 @@ export class SharedService {
       // This stops the character from being added to the input
       event.preventDefault();
     }
-
-
   }
 }

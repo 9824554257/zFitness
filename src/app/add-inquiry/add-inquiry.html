@@ -15,13 +15,27 @@
                 <label class="form-label" for="a1"
                   >Full Name <span class="text-danger">*</span></label
                 >
-                <input type="text" class="form-control" id="a1" placeholder="Enter Full Name" />
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fullName"
+                  name="fullName"
+                  [(ngModel)]="inquiryDetails.fullName"
+                  placeholder="Enter Full Name"
+                />
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a2">Email <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="a2" placeholder="Enter Email" />
+                <input
+                  type="text"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  [(ngModel)]="inquiryDetails.email"
+                  placeholder="Enter Email"
+                />
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -32,7 +46,9 @@
                 <input
                   type="email"
                   class="form-control"
-                  id="a3"
+                  id="mobileNumber"
+                  name="mobileNumber"
+                  [(ngModel)]="inquiryDetails.mobileNumber"
                   placeholder="Enter Mobile Number"
                 />
               </div>
@@ -48,7 +64,8 @@
                       class="form-check-input"
                       type="radio"
                       name="selectGenderOptions"
-                      id="selectGender1"
+                      id="gender"
+                      [(ngModel)]="inquiryDetails.gender"
                       value="male"
                     />
                     <label class="form-check-label" for="selectGender1">Male</label>
@@ -59,6 +76,7 @@
                       type="radio"
                       name="selectGenderOptions"
                       id="selectGender2"
+                      [(ngModel)]="inquiryDetails.gender"
                       value="female"
                     />
                     <label class="form-check-label" for="selectGender2">Female</label>
@@ -71,19 +89,38 @@
                 <label class="form-label" for="a4"
                   >Date of Birth <span class="text-danger">*</span></label
                 >
-                <input type="date" class="form-control" id="a4" placeholder="Enter DOB" />
+                <input
+                  type="date"
+                  class="form-control"
+                  id="dateOfBirth"
+                  name="dateOfBirth"
+                  [(ngModel)]="inquiryDetails.dateOfBirth"
+                  placeholder="Enter DOB"
+                />
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a5">Inquiry Date</label>
-                <input type="date" class="form-control" id="Date1" placeholder="Enter DOB" />
+                <input
+                  type="date"
+                  class="form-control"
+                  id="inquiryDate"
+                  name="inquiryDate"
+                  [(ngModel)]="inquiryDetails.inquiryDate"
+                  placeholder="Enter DOB"
+                />
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a6">Occupation</label>
-                <select class="form-select" id="a6">
+                <select
+                  class="form-select"
+                  id="occupation"
+                  name="occupation"
+                  [(ngModel)]="inquiryDetails.occupation"
+                >
                   <option value="0">Select</option>
                   <option value="1">Developer</option>
                   <option value="2">Designer</option>
@@ -96,8 +133,22 @@
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a6">Package Type</label>
-                <select class="form-select" id="Select1">
-                  <option value="0">Select</option>
+                <select
+                  class="form-select"
+                  id="packageType"
+                  name="packageType"
+                  [(ngModel)]="inquiryDetails.packageType"
+                >
+                  @for (
+                    singlePackage of sharedService.masterPackageDetailsList();
+                    track singlePackage._id
+                  ) {
+                    <option [value]="singlePackage._id" [id]="singlePackage._id">
+                      {{ singlePackage.packageName }}
+                    </option>
+                  } @empty {
+                    <option value="0">No packages Available</option>
+                  }
                 </select>
               </div>
             </div>
@@ -105,7 +156,14 @@
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a5">Follow-up Date</label>
-                <input type="date" class="form-control" id="Date2" placeholder="Enter DOB" />
+                <input
+                  type="date"
+                  class="form-control"
+                  id="followUpDate"
+                  name="followUpDate"
+                  [(ngModel)]="inquiryDetails.followUpDate"
+                  placeholder="Enter Follow Up Date"
+                />
               </div>
             </div>
 
@@ -116,6 +174,8 @@
                   type="remarks"
                   class="form-control"
                   id="remarks"
+                  name="remarks"
+                  [(ngModel)]="inquiryDetails.remarks"
                   placeholder="Enter Remarks"
                 />
               </div>
@@ -123,7 +183,9 @@
             <div class="col-sm-12">
               <div class="d-flex gap-2 justify-content-end">
                 <button type="button" class="btn btn-outline-secondary">Cancel</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-primary" (click)="saveInquiryDetails()">
+                  Save
+                </button>
               </div>
             </div>
           </div>
