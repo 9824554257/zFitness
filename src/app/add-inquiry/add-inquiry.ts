@@ -21,6 +21,7 @@ import {
 export class AddInquiry implements OnInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'end';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+  occupationList: any = [];
 
   inquiryDetails: any = {
     fullName: '',
@@ -46,6 +47,7 @@ export class AddInquiry implements OnInit {
   ngOnInit(): void {
     this.populateInquiryDetails();
     this.fetchPackageDetails();
+    this.fetchOccupationList();
   }
 
   fetchPackageDetails() {
@@ -60,6 +62,33 @@ export class AddInquiry implements OnInit {
       },
       (error: any) => {
         this.loaderService.show.set(false);
+      },
+    );
+  }
+
+  fetchOccupationList() {
+    // Check if occupation list is already cached
+    if (!this.sharedService.checkIfValueIsEmpty(this.sharedService.occupationList())) {
+      this.occupationList = this.sharedService.occupationList();
+      return;
+    }
+
+    // If not cached, fetch from API
+    let request = { headerTypes: ['Occupation'] };
+    this.appService.getMiscMasterDataFromType(request).subscribe(
+      (data: any) => {
+        if (!this.sharedService.checkIfValueIsEmpty(data)) {
+          const miscData = data['data'];
+          const occupationData = miscData.filter(
+            (singleData: any) => singleData.headerType === 'Occupation',
+          )[0].keyValuePairs;
+          this.occupationList = occupationData;
+          // Cache the occupation list in shared service
+          this.sharedService.occupationList.set(occupationData);
+        }
+      },
+      (error: any) => {
+        console.error('Error in fetching occupation data', error);
       },
     );
   }
