@@ -50,16 +50,19 @@
                     <td>{{ member.email }}</td>
                     <td>{{ member.joinDate }}</td>
                     <td>
-                      <!-- actions -->
                       <div class="d-inline-flex gap-1">
                         <button
                           class="btn btn-outline-danger btn-sm"
-                          data-bs-toggle="modal"
-                          data-bs-target="#delRow"
-                          (click)="deleteMember(member)"
+                          (click)="openDeleteModal(member)"
                         >
                           <i class="ri-delete-bin-line"></i>
                         </button>
+                        <!-- <button
+                          class="btn btn-outline-info btn-sm"
+                          (click)="openInvoiceModal(member)"
+                        >
+                          <i class="ri-printer-line"></i>
+                        </button> -->
                         <button
                           (click)="editMemberDetails(member)"
                           class="btn btn-outline-success btn-sm"
@@ -81,38 +84,6 @@
             </table>
           </div>
           <!-- Table ends -->
-
-          <!-- Modal Delete Row -->
-          <div
-            class="modal fade"
-            id="delRow"
-            tabindex="-1"
-            aria-labelledby="delRowLabel"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog modal-sm">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="delRowLabel">Confirm</h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <div class="modal-body">Are you sure you want to delete the gym member?</div>
-                <div class="modal-footer">
-                  <div class="d-flex justify-content-end gap-2">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
-                      No
-                    </button>
-                    <button class="btn btn-danger">Yes</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

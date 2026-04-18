@@ -10,6 +10,7 @@ export class SharedService {
   inquiryDetails = signal<any[]>([]);
   savedMemberDataResponse = signal<any>({});
   savedInquiryDataResponse = signal<any>({});
+  occupationList = signal<any[]>([]);
   snackBar = inject(MatSnackBar);
 
   constructor() {}

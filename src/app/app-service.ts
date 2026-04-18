@@ -116,4 +116,9 @@ export class AppService {
     this.http.put(`${this.baseUrl}/inquiry/updateInquiryByInquiryId`, request, {
       headers: this.getHeaders(),
     });
+
+  deleteInquiryDetails = (inquiryId: any) =>
+    this.http.delete(`${this.baseUrl}/inquiry/deleteInquiryDetail?inquiryId=${inquiryId}`, {
+      headers: this.getHeaders(),
+    });
 }

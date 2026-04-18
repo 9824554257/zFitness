@@ -66,7 +66,7 @@
                       name="selectGenderOptions"
                       id="gender"
                       [(ngModel)]="inquiryDetails.gender"
-                      value="male"
+                      value="Male"
                     />
                     <label class="form-check-label" for="selectGender1">Male</label>
                   </div>
@@ -77,7 +77,7 @@
                       name="selectGenderOptions"
                       id="selectGender2"
                       [(ngModel)]="inquiryDetails.gender"
-                      value="female"
+                      value="Female"
                     />
                     <label class="form-check-label" for="selectGender2">Female</label>
                   </div>
@@ -121,12 +121,12 @@
                   name="occupation"
                   [(ngModel)]="inquiryDetails.occupation"
                 >
-                  <option value="0">Select</option>
-                  <option value="1">Developer</option>
-                  <option value="2">Designer</option>
-                  <option value="3">Teacher</option>
-                  <option value="4">Doctor</option>
-                  <option value="5">Business</option>
+                  <option value="">Select</option>
+                  @for (singleOccupation of occupationList; track $index) {
+                    <option [value]="singleOccupation.key">{{ singleOccupation.key }}</option>
+                  } @empty {
+                    <option value="">No occupations available</option>
+                  }
                 </select>
               </div>
             </div>
