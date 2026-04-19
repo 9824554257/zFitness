@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AppService } from '../app-service';
 import { SharedService } from '../shared-service';
@@ -13,8 +13,10 @@ import { LoaderService } from '../loader-service';
   standalone: true,
 })
 export class MemberList implements OnInit {
+  @ViewChild('delModal') modal!: ElementRef<HTMLDialogElement>;
+  selectedMemberToDelete: any = null;
+
   selectedMember: any;
-  memberToDelete: any;
 
   constructor(
     private appService: AppService,
@@ -36,15 +38,20 @@ export class MemberList implements OnInit {
     }
   }
 
-  openDeleteModal(member: any) {
-    this.memberToDelete = member;
-    if (confirm('Are you sure you want to delete the gym member?')) {
-      this.confirmDelete();
-    }
+  deleteMember(member: any) {
+    this.selectedMemberToDelete = member;
+    this.modal.nativeElement.showModal();
+  }
+
+  closeModal() {
+    this.modal.nativeElement.close();
   }
 
   confirmDelete() {
-    this.deleteMember(this.memberToDelete);
+    this.closeModal();
+    if (this.selectedMemberToDelete) {
+      this.deleteMemberCall(this.selectedMemberToDelete);
+    }
   }
 
   generateInvoiceHTML(): string {
@@ -280,7 +287,7 @@ export class MemberList implements OnInit {
     this.sharedService.savedMemberDataResponse.set(member);
   }
 
-  deleteMember(member : any) {
+  deleteMemberCall(member : any) {
     this.loaderService.show.set(true);
     this.appService.deleteMemberDetails(member._id).subscribe((data : any) => {
       this.loaderService.show.set(false);

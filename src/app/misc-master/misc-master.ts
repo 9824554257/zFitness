@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppService } from '../app-service';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +14,9 @@ import { LoaderService } from '../loader-service';
   standalone: true,
 })
 export class MiscMaster {
+  @ViewChild('delModal') modal!: ElementRef<HTMLDialogElement>;
+  selectedMiscToDelete: any = null;
+
   type: any;
   textValue: any;
   miscData: any = [];
@@ -46,6 +49,7 @@ export class MiscMaster {
   saveMiscData() {
     if (
       !this.sharedService.checkIfValueIsEmpty(this.type) &&
+      !this.sharedService.checkIfValueIsEmpty(this.textValue) &&
       this.type.toString().toUpperCase() !== 'SELECT'
     ) {
       this.loaderService.show.set(true);
@@ -69,7 +73,33 @@ export class MiscMaster {
         },
       );
     } else {
-      alert('Invalid Type. Please select another Type and try again.');
+      this.sharedService.snackBar.open('Name and type are mandatory.');
+    }
+  }
+
+  deleteMisc(misc: any) {
+    this.selectedMiscToDelete = misc;
+    this.modal.nativeElement.showModal();
+  }
+
+  closeModal() {
+    this.modal.nativeElement.close();
+  }
+
+  confirmDelete() {
+    this.closeModal();
+    if (this.selectedMiscToDelete) {
+      this.loaderService.show.set(true);
+      this.appService.deleteMiscData(this.selectedMiscToDelete._id).subscribe(
+        (data: any) => {
+          this.loaderService.show.set(false);
+          this.getMiscDataFromType(); // Refresh the list
+          this.selectedMiscToDelete = null;
+        },
+        (error: any) => {
+          this.loaderService.show.set(false);
+        },
+      );
     }
   }
 }

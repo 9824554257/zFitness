@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppService } from '../app-service';
 import { SharedService } from '../shared-service';
@@ -14,7 +14,12 @@ import { Router } from '@angular/router';
   templateUrl: './add-member.html',
   styleUrl: './add-member.css',
 })
-export class AddMember implements OnInit {
+export class AddMember implements OnInit, OnDestroy {
+  @ViewChild('delModal') modal!: ElementRef<HTMLDialogElement>;
+  @ViewChild('ptDelModal') ptModal!: ElementRef<HTMLDialogElement>;
+  selectedPackageToDelete: any = null;
+  selectedPtToDelete: any = null;
+
   minDate: any = null;
   maxDate: any = null;
   memberDetails: any = {
@@ -136,6 +141,55 @@ export class AddMember implements OnInit {
     this.populateMemberDetailsFromResponse();
     this.fetchPackageDetails();
     this.getMiscDataFromType();
+  }
+
+  ngOnDestroy(): void {
+    this.resetMemberDetails();
+  }
+
+  resetMemberDetails() {
+    this.memberDetails = {
+      memberNumber: '',
+      fullName: '',
+      emailAddress: '',
+      mobileNumber: '',
+      dateOfBirth: '',
+      inquiryDate: '',
+      occupation: '',
+      packageType: '',
+      joinDate: '',
+      dueDate: '',
+      remarks: '',
+      gender: '',
+      period: '',
+      personalTrainer: '',
+      ptAmount: '',
+      age: '',
+      maritalStatus: '',
+      address: '',
+      shiftType: '',
+      time: '',
+      joinWeight: '',
+      paidDate: '',
+      packageDetails: {
+        packageName: '',
+        period: '',
+        startDate: '',
+        endDate: '',
+        amount: '',
+      },
+      memberPackageDetails: [],
+      memberTrainerDetails: [],
+      ptDetails: {
+        ptName: '',
+        ptPeriod: '',
+        amount: '',
+        startDate: '',
+        endDate: '',
+        remarks: '',
+        uniqueId: '',
+      },
+    };
   }
 
   printData() {
@@ -659,7 +713,23 @@ export class AddMember implements OnInit {
     };
   }
 
-  deletePtDetails(singlePt: any) {
+  deletePtDetails(pt: any) {
+    this.selectedPtToDelete = pt;
+    this.ptModal.nativeElement.showModal();
+  }
+
+  closePtModal() {
+    this.ptModal.nativeElement.close();
+  }
+
+  confirmPtDelete() {
+    this.closePtModal();
+    if (this.selectedPtToDelete) {
+      this.deletePtDetailsCall(this.selectedPtToDelete);
+    }
+  }
+
+  deletePtDetailsCall(singlePt: any) {
     this.loaderService.show.set(true);
     this.appService.deleteMemberTrainer(singlePt._id).subscribe(
       (data: any) => {
@@ -678,7 +748,23 @@ export class AddMember implements OnInit {
     );
   }
 
-  deletePackage(singlePackage: any) {
+  deletePackage(pkg: any) {
+    this.selectedPackageToDelete = pkg;
+    this.modal.nativeElement.showModal();
+  }
+
+  closeModal() {
+    this.modal.nativeElement.close();
+  }
+
+  confirmDelete() {
+    this.closeModal();
+    if (this.selectedPackageToDelete) {
+      this.deletePackageCall(this.selectedPackageToDelete);
+    }
+  }
+
+  deletePackageCall(singlePackage: any) {
     this.loaderService.show.set(true);
     this.appService.deleteMemberPackage(singlePackage._id).subscribe(
       (data: any) => {
