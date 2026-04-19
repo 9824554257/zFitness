@@ -37,6 +37,15 @@ export class AppService {
       headers: this.getHeaders(),
     });
 
+  deleteMemberPackageDetails = (packageId : any) => {
+    this.http.delete(
+      `${this.baseUrl}/memberDetailsPackage/deleteMemberPackageDetail?packageId=${packageId}`,
+      {
+        headers: this.getHeaders(),
+      },
+    );
+  }
+
   savePackageMasterDetails = (request: any) =>
     this.http.post(`${this.baseUrl}/package/savePackageDetails`, request, {
       headers: this.getHeaders(),
@@ -94,10 +103,10 @@ export class AppService {
       headers: this.getHeaders(),
     });
 
-  // deleteMiscData = (request: any) =>
-  //   this.http.delete(`${this.baseUrl}/miscMaster/getMiscMaster`, request, {
-  //     headers: this.getHeaders(),
-  //   });
+  deleteMiscData = (miscMasterId: any) =>
+    this.http.delete(`${this.baseUrl}/miscMaster/deleteMiscMaster?miscMasterId=${miscMasterId}`, {
+      headers: this.getHeaders(),
+    });
   //Misc master API Ends
 
   //inquiry/getAllInquiryDetails
