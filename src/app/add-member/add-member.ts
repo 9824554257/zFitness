@@ -145,6 +145,7 @@ export class AddMember implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.resetMemberDetails();
+    this.sharedService.savedMemberDataResponse.set({});
   }
 
   resetMemberDetails() {
