@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppService } from '../app-service';
 import { SharedService } from '../shared-service';
@@ -99,6 +99,9 @@ export class PackageMaster implements OnInit {
       },
     ],
   };
+
+  @ViewChild('deletePackageModal') deletePackageModal!: ElementRef<HTMLDialogElement>;
+  selectedPackageToDelete: any = null;
 
   packageDetail: any = {
     packageName: '',
@@ -227,6 +230,46 @@ export class PackageMaster implements OnInit {
       (error: any) => {
         this.loaderService.show.set(false);
         this._snackBar.open('Error in Package fetch.Please try again.', '', {
+          horizontalPosition: this.horizontalPosition,
+          verticalPosition: this.verticalPosition,
+          duration: 3000,
+          panelClass: ['blue-snackbar'],
+        });
+      },
+    );
+  }
+
+  deletePackage(singlePackage: any) {
+    this.selectedPackageToDelete = singlePackage;
+    this.deletePackageModal.nativeElement.showModal();
+  }
+
+  closeDeleteModal() {
+    this.deletePackageModal.nativeElement.close();
+  }
+
+  confirmDeletePackage() {
+    this.closeDeleteModal();
+    if (!this.selectedPackageToDelete) {
+      return;
+    }
+
+    this.loaderService.show.set(true);
+    this.appService.deletePackageMasterDetails(this.selectedPackageToDelete._id).subscribe(
+      () => {
+        this.getPackageList();
+        this.selectedPackageToDelete = null;
+        this.loaderService.show.set(false);
+        this._snackBar.open('Package deleted successfully.', '', {
+          horizontalPosition: this.horizontalPosition,
+          verticalPosition: this.verticalPosition,
+          duration: 3000,
+          panelClass: ['blue-snackbar'],
+        });
+      },
+      (error: any) => {
+        this.loaderService.show.set(false);
+        this._snackBar.open('Error deleting package. Please try again.', '', {
           horizontalPosition: this.horizontalPosition,
           verticalPosition: this.verticalPosition,
           duration: 3000,
