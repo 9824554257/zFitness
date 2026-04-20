@@ -51,6 +51,11 @@ export class AppService {
       headers: this.getHeaders(),
     });
 
+  deletePackageMasterDetails = (packageId: any) =>
+  this.http.delete(`${this.baseUrl}/package/deletePackageDetail?packageId=${packageId}`, {
+    headers: this.getHeaders(),
+  });
+
   //Misc master API Starts
   saveMiscData = (request: any) =>
     this.http.post(`${this.baseUrl}/miscMaster/saveMiscMaster`, request, {
