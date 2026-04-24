@@ -18,6 +18,9 @@ export class MemberList implements OnInit {
 
   selectedMember: any;
 
+  selectedFile: File | null = null;
+  isUploading: boolean = false;
+
   constructor(
     private appService: AppService,
     public sharedService: SharedService,
@@ -310,5 +313,144 @@ export class MemberList implements OnInit {
 
   generatePDF() {
     window.print();
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
+  }
+
+  uploadMemberData() {
+    if (!this.selectedFile) {
+      this.sharedService.snackBar.open('Please select a file first.', 'Close', {
+        duration: 3000,
+        panelClass: ['snackbar-warning']
+      });
+      return;
+    }
+
+    this.isUploading = true;
+
+    this.appService.uploadMemberData(this.selectedFile).subscribe(
+      (response: any) => {
+        this.isUploading = false;
+
+        // Handle successful response
+        if (response.successful !== undefined) {
+          const { successful, failed, message } = response;
+
+          if (failed === 0) {
+            // Complete success
+            this.sharedService.snackBar.open(`${message} - All members uploaded successfully!`, 'Close', {
+              duration: 5000,
+              panelClass: ['snackbar-success']
+            });
+          } else if (successful > 0) {
+            // Partial success
+            this.sharedService.snackBar.open(`${message} - ${successful} uploaded, ${failed} failed. Check console for details.`, 'Close', {
+              duration: 7000,
+              panelClass: ['snackbar-warning']
+            });
+            console.log('Upload Results:', response);
+          } else {
+            // Complete failure
+            this.sharedService.snackBar.open(`${message} - No members were uploaded.`, 'Close', {
+              duration: 5000,
+              panelClass: ['snackbar-error']
+            });
+          }
+
+          // Refresh the member list if at least one member was uploaded
+          if (successful > 0) {
+            this.fetchMemberDetails();
+          }
+        } else {
+          // Fallback for unexpected success response
+          this.sharedService.snackBar.open('Member data uploaded successfully!', 'Close', {
+            duration: 5000,
+            panelClass: ['snackbar-success']
+          });
+          this.fetchMemberDetails();
+        }
+
+        this.selectedFile = null;
+        // Reset file input
+        const fileInput = document.getElementById('excelFile') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';
+        }
+      },
+      (error: any) => {
+        this.isUploading = false;
+
+        // Handle different error types
+        if (error.status === 401) {
+          this.sharedService.snackBar.open('Authentication failed. Please log in again.', 'Close', {
+            duration: 5000,
+            panelClass: ['snackbar-error']
+          });
+        } else if (error.status === 400) {
+          const errorData = error.error;
+
+          if (errorData.message === 'File cannot be empty') {
+            this.sharedService.snackBar.open('Please select a valid Excel file.', 'Close', {
+              duration: 4000,
+              panelClass: ['snackbar-error']
+            });
+          } else if (errorData.message === 'Excel file must contain exactly one sheet') {
+            this.sharedService.snackBar.open('Excel file must contain exactly one worksheet.', 'Close', {
+              duration: 5000,
+              panelClass: ['snackbar-error']
+            });
+          } else if (errorData.message === 'Excel file contains no data') {
+            this.sharedService.snackBar.open('Excel file contains no data rows.', 'Close', {
+              duration: 4000,
+              panelClass: ['snackbar-error']
+            });
+          } else if (errorData.message?.includes('Missing required columns')) {
+            this.sharedService.snackBar.open(`Missing required columns: ${errorData.message.replace('Missing required columns: ', '')}`, 'Close', {
+              duration: 7000,
+              panelClass: ['snackbar-error']
+            });
+          } else if (errorData.message === 'Validation failed' && errorData.errors) {
+            const totalErrors = errorData.errors.length;
+            const firstError = errorData.errors[0];
+            this.sharedService.snackBar.open(`Validation failed: ${totalErrors} row(s) have errors. Check console for details.`, 'Close', {
+              duration: 8000,
+              panelClass: ['snackbar-error']
+            });
+            console.log('Validation Errors:', errorData.errors);
+          } else if (errorData.message === 'Duplicate member numbers found in database' && errorData.errors) {
+            const totalDuplicates = errorData.errors.length;
+            this.sharedService.snackBar.open(`Duplicate member numbers found: ${totalDuplicates} conflict(s). Check console for details.`, 'Close', {
+              duration: 7000,
+              panelClass: ['snackbar-error']
+            });
+            console.log('Duplicate Errors:', errorData.errors);
+          } else {
+            // Generic 400 error
+            this.sharedService.snackBar.open(errorData.message || 'Invalid file format or data.', 'Close', {
+              duration: 5000,
+              panelClass: ['snackbar-error']
+            });
+          }
+        } else if (error.status === 500) {
+          this.sharedService.snackBar.open('Server error occurred. Please try again later.', 'Close', {
+            duration: 5000,
+            panelClass: ['snackbar-error']
+          });
+        } else {
+          // Network or other errors
+          this.sharedService.snackBar.open('Upload failed. Please check your connection and try again.', 'Close', {
+            duration: 5000,
+            panelClass: ['snackbar-error']
+          });
+        }
+
+        console.error('Upload error:', error);
+      }
+    );
   }
 }

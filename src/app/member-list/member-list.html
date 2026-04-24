@@ -24,6 +24,51 @@
           <a routerLink="/newMember" class="btn btn-primary ms-auto">Add New Member</a>
         </div>
         <div class="card-body">
+          <!-- Bulk Upload Section -->
+          <div class="d-flex align-items-center justify-content-between mb-4 p-3 border rounded"
+               [class.opacity-50]="isUploading"
+               style="background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%); border-color: #6479e7 !important;">
+            <div class="d-flex align-items-center gap-3">
+              <div class="d-flex align-items-center justify-content-center rounded-circle"
+                   [class.bg-warning]="isUploading"
+                   style="width: 40px; height: 40px; background: #6479e7; color: white;">
+                <i class="ri-file-excel-line fs-5" *ngIf="!isUploading"></i>
+                <i class="ri-loader-4-line fs-5 animate-spin" *ngIf="isUploading"></i>
+              </div>
+              <div>
+                <h6 class="mb-1 text-primary fw-bold">Bulk Upload Members</h6>
+                <small class="text-muted">Upload Excel file (.xlsx, .xls) to add multiple members</small>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <input
+                type="file"
+                class="form-control form-control-sm d-none"
+                id="excelFile"
+                accept=".xlsx,.xls"
+                (change)="onFileSelected($event)"
+                [disabled]="isUploading"
+              />
+              <div class="d-flex flex-column">
+                <label for="excelFile" class="btn btn-outline-primary btn-sm mb-0" [class.disabled]="isUploading">
+                  <i class="ri-upload-line me-1"></i>
+                  {{ selectedFile ? 'Change File' : 'Choose File' }}
+                </label>
+                <small *ngIf="selectedFile" class="text-muted mt-1">{{ selectedFile.name }}</small>
+              </div>
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                (click)="uploadMemberData()"
+                [disabled]="!selectedFile || isUploading"
+              >
+                <span *ngIf="isUploading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <i class="ri-cloud-upload-line me-1" *ngIf="!isUploading"></i>
+                {{ isUploading ? 'Uploading...' : 'Upload' }}
+              </button>
+            </div>
+          </div>
+
           <!-- Table starts -->
           <div class="table-responsive">
             <table id="basicExample" class="table m-0 align-middle">
