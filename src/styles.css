@@ -1,1 +1,43 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Custom snackbar styles */
+.snackbar-success {
+  background-color: #06c2c0 !important;
+  color: white !important;
+}
+
+.snackbar-error {
+  background-color: #ff5252 !important;
+  color: white !important;
+}
+
+.snackbar-warning {
+  background-color: #f7cc30 !important;
+  color: #333 !important;
+}
+
+/* Enhanced snackbar for better readability of long messages */
+.mat-mdc-snackbar-surface {
+  max-width: 90vw !important;
+  word-wrap: break-word;
+}
+
+@media (max-width: 600px) {
+  .mat-mdc-snackbar-surface {
+    max-width: 95vw !important;
+  }
+}
+
+/* Upload section styles */
+.opacity-50 {
+  opacity: 0.5;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
