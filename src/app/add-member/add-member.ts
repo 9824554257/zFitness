@@ -17,11 +17,22 @@ import { Router } from '@angular/router';
 export class AddMember implements OnInit, OnDestroy {
   @ViewChild('delModal') modal!: ElementRef<HTMLDialogElement>;
   @ViewChild('ptDelModal') ptModal!: ElementRef<HTMLDialogElement>;
+  @ViewChild('webcamModal') webcamModal!: ElementRef<HTMLDialogElement>;
+  @ViewChild('webcamVideo') webcamVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('webcamCanvas') webcamCanvas!: ElementRef<HTMLCanvasElement>;
+  
   selectedPackageToDelete: any = null;
   selectedPtToDelete: any = null;
 
   minDate: any = null;
   maxDate: any = null;
+  
+  // Image upload properties
+  selectedPhotoFile: File | null = null;
+  currentImageUrl: string | null = null;
+  isWebcamSupported: boolean = false;
+  isWebcamActive: boolean = false;
+  webcamStream: MediaStream | null = null;
   memberDetails: any = {
     memberNumber: '',
     fullName: '',
@@ -132,6 +143,9 @@ export class AddMember implements OnInit, OnDestroy {
       this.memberDetails.memberTrainerDetails =
         this.sharedService.savedMemberDataResponse().memberTrainerDetails || [];
 
+      // Set current image URL for display
+      this.currentImageUrl = this.sharedService.savedMemberDataResponse().userImageUrl || null;
+
       this.validateDOB();
     }
   }
@@ -146,6 +160,160 @@ export class AddMember implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.resetMemberDetails();
     this.sharedService.savedMemberDataResponse.set({});
+    this.stopWebcam();
+  }
+
+  // Image upload methods
+  checkWebcamSupport() {
+    this.isWebcamSupported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  }
+
+  onPhotoFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 1 * 1024 * 1024) { // 1MB limit
+        this.sharedService.snackBar.open('File size must be less than 1MB', 'Close', { duration: 3000 });
+        return;
+      }
+      this.selectedPhotoFile = file;
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.currentImageUrl = e.target?.result as string;
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  openWebcamModal() {
+    this.checkWebcamSupport();
+    if (!this.isWebcamSupported) {
+      this.sharedService.snackBar.open('Webcam not supported on this device', 'Close', { duration: 3000 });
+      return;
+    }
+    this.webcamModal.nativeElement.showModal();
+    this.startWebcam();
+  }
+
+  closeWebcamModal() {
+    this.webcamModal.nativeElement.close();
+    this.stopWebcam();
+  }
+
+  startWebcam() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } })
+        .then((stream) => {
+          this.webcamStream = stream;
+          this.isWebcamActive = true;
+          if (this.webcamVideo) {
+            this.webcamVideo.nativeElement.srcObject = stream;
+          }
+          this.cdr.detectChanges();
+        })
+        .catch((error) => {
+          console.error('Error accessing webcam:', error);
+          this.isWebcamActive = false;
+          
+          if (error.name === 'NotAllowedError') {
+            this.sharedService.snackBar.open('Camera access denied. Please enable camera permissions in your browser settings.', 'Close', { duration: 5000 });
+          } else if (error.name === 'NotFoundError') {
+            this.sharedService.snackBar.open('No camera found on this device.', 'Close', { duration: 3000 });
+          } else if (error.name === 'NotReadableError') {
+            this.sharedService.snackBar.open('Camera is already in use by another application.', 'Close', { duration: 3000 });
+          } else {
+            this.sharedService.snackBar.open('Error accessing webcam. Please try again.', 'Close', { duration: 3000 });
+          }
+          
+          this.closeWebcamModal();
+        });
+    }
+  }
+
+  stopWebcam() {
+    if (this.webcamStream) {
+      this.webcamStream.getTracks().forEach(track => track.stop());
+      this.webcamStream = null;
+    }
+    this.isWebcamActive = false;
+  }
+
+  capturePhoto() {
+    if (!this.webcamVideo || !this.webcamCanvas) return;
+
+    const video = this.webcamVideo.nativeElement;
+    const canvas = this.webcamCanvas.nativeElement;
+    const context = canvas.getContext('2d');
+
+    if (context) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob((blob) => {
+        if (blob) {
+          if (blob.size > 1 * 1024 * 1024) {
+            this.sharedService.snackBar.open('Captured photo is too large. Please try again with less detail or lower lighting.', 'Close', { duration: 5000 });
+            return;
+          }
+          const file = new File([blob], 'webcam-photo.jpg', { type: 'image/jpeg' });
+          this.selectedPhotoFile = file;
+          this.currentImageUrl = canvas.toDataURL('image/jpeg');
+          this.closeWebcamModal();
+          this.cdr.detectChanges();
+        }
+      }, 'image/jpeg', 0.8);
+    }
+  }
+
+  deleteCurrentImage() {
+    this.selectedPhotoFile = null;
+    this.currentImageUrl = null;
+    // If editing existing member, we might need to delete from server
+    if (this.sharedService.savedMemberDataResponse() && this.sharedService.savedMemberDataResponse().userImageUrl) {
+      if (confirm('Are you sure you want to delete the current photo?')) {
+        this.loaderService.show.set(true);
+        this.appService.deleteUserImage(this.sharedService.savedMemberDataResponse()._id).subscribe(
+          () => {
+            this.loaderService.show.set(false);
+            this.sharedService.savedMemberDataResponse.set({
+              ...this.sharedService.savedMemberDataResponse(),
+              userImageUrl: null,
+              userImageId: null
+            });
+            this.sharedService.snackBar.open('Photo deleted successfully!', 'Close', { duration: 3000 });
+          },
+          (error) => {
+            this.loaderService.show.set(false);
+            this.sharedService.snackBar.open('Failed to delete photo', 'Close', { duration: 3000 });
+          }
+        );
+      }
+    }
+  }
+
+  uploadMemberImage(memberId: string) {
+    if (!this.selectedPhotoFile) return;
+
+    this.appService.uploadUserImage(this.selectedPhotoFile, memberId).subscribe(
+      (response: any) => {
+        // Update the saved member data with the new image URL
+        const updatedMember = { ...this.sharedService.savedMemberDataResponse() };
+        if (response.member) {
+          updatedMember.userImageUrl = response.member.userImageUrl;
+          updatedMember.userImageId = response.member.userImageId;
+          this.sharedService.savedMemberDataResponse.set(updatedMember);
+          this.currentImageUrl = response.member.userImageUrl;
+        }
+        this.selectedPhotoFile = null;
+        this.sharedService.snackBar.open('Photo uploaded successfully!', 'Close', { duration: 3000 });
+      },
+      (error) => {
+        console.error('Image upload failed:', error);
+        this.sharedService.snackBar.open('Failed to upload photo. Please try again.', 'Close', { duration: 3000 });
+      }
+    );
   }
 
   resetMemberDetails() {
@@ -391,6 +559,11 @@ export class AddMember implements OnInit, OnDestroy {
             this.loaderService.show.set(false);
             this.sharedService.savedMemberDataResponse.set(data['data']);
             
+            // Upload image if selected
+            if (this.selectedPhotoFile) {
+              this.uploadMemberImage(data['data']._id);
+            }
+            
             if (redirect) {
               this.memberDetails = {
                 memberNumber: '',
@@ -423,11 +596,17 @@ export class AddMember implements OnInit, OnDestroy {
                   amount: '',
                 },
                 ptDetails: {
+                  uniqueId: '',
                   ptName: '',
                   ptPeriod: '',
                   amount: '',
+                  startDate: '',
+                  endDate: '',
+                  remarks: '',
                 },
               };
+              this.selectedPhotoFile = null;
+              this.currentImageUrl = null;
               this.sharedService.savedMemberDataResponse.set([]);
               this.router.navigate(['/newMemberList']);
             }

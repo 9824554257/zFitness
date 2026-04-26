@@ -145,4 +145,21 @@ export class AppService {
       }),
     });
   };
+
+  uploadUserImage = (file: File, uniqueId: string) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('uniqueId', uniqueId);
+    return this.http.post(`${this.baseUrl}/members/uploadUserImage`, formData, {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      }),
+    });
+  };
+
+  deleteUserImage = (uniqueId: string) => {
+    return this.http.post(`${this.baseUrl}/members/deleteUserImage`, { uniqueId }, {
+      headers: this.getHeaders(),
+    });
+  };
 }

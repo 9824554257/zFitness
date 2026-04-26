@@ -8,6 +8,66 @@
         <h5 class="card-header border-bottom">Member Details</h5>
         <!--</div>-->
         <div class="card-body">
+          <!-- Member Photo Section -->
+          <div class="d-flex justify-content-center mb-4">
+            <div class="position-relative">
+              <div class="d-flex align-items-center justify-content-center rounded-circle border bg-light" 
+                   style="width: 120px; height: 120px; overflow: hidden;">
+                <ng-container *ngIf="currentImageUrl; else defaultIcon">
+                  <img 
+                    [src]="currentImageUrl" 
+                    alt="Member Photo" 
+                    class="w-100 h-100" 
+                    style="object-fit: cover;"
+                  >
+                </ng-container>
+                <ng-template #defaultIcon>
+                  <i class="ri-user-line fs-1 text-muted"></i>
+                </ng-template>
+              </div>
+              <button 
+                *ngIf="currentImageUrl"
+                type="button"
+                class="btn btn-danger btn-sm position-absolute bottom-0 end-0 rounded-circle"
+                style="width: 32px; height: 32px; padding: 0; font-size: 14px;"
+                (click)="deleteCurrentImage()"
+                title="Remove Photo"
+              >
+                <i class="ri-delete-bin-line"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Photo Upload Controls -->
+          <div class="d-flex justify-content-center mb-4">
+            <div class="d-flex flex-column align-items-center gap-2">
+              <div class="d-flex gap-2">
+                <input
+                  type="file"
+                  class="form-control form-control-sm d-none"
+                  id="photoFile"
+                  accept="image/*"
+                  (change)="onPhotoFileSelected($event)"
+                >
+                <label for="photoFile" class="btn btn-outline-primary btn-sm">
+                  <i class="ri-upload-line me-1"></i>
+                  Upload Photo
+                </label>
+                <button 
+                  type="button" 
+                  class="btn btn-outline-secondary btn-sm"
+                  (click)="openWebcamModal()"
+                >
+                  <i class="ri-camera-line me-1"></i>
+                  Take Photo
+                </button>
+              </div>
+              <small class="text-muted text-center">
+                Upload a photo or use webcam to capture.<br>Max size: 1MB
+              </small>
+            </div>
+          </div>
+
           <!-- Row starts -->
           <div class="row gx-4">
             <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -226,6 +286,8 @@
                   max="280"
                 />
               </div>
+            </div>
+
             </div>
 
             <!-- Row ends -->
@@ -540,6 +602,7 @@
             </div>
           </div>
         </div>
+      </div>
         <div class="card-footer border-top">
           <div class="col-sm-12">
             <div class="d-flex gap-2 justify-content-end">
@@ -636,7 +699,46 @@
         </dialog>
       </div>
     </div>
+<!-- Row ends -->
+
+<!-- Webcam Modal -->
+<dialog #webcamModal style="border: none; border-radius: 8px; max-width: 600px; width: 90%;">
+  <div class="modal-header">
+    <h5>Capture Photo</h5>
+    <button class="btn-close-x" (click)="closeWebcamModal()">&times;</button>
   </div>
-  <!-- Row ends -->
-</div>
-<!-- App body ends -->
+  <div class="modal-body text-center">
+    <video
+      #webcamVideo
+      autoplay
+      playsinline
+      muted
+      style="width: 100%; max-width: 400px; border-radius: 8px; border: 2px solid #e9ecef; background: black;"
+    ></video>
+    <canvas #webcamCanvas style="display: none;"></canvas>
+
+    <div class="mt-3" *ngIf="!isWebcamActive">
+      <p>Requesting camera access...</p>
+    </div>
+
+    <div class="mt-3">
+      <button
+        type="button"
+        class="btn btn-primary me-2"
+        (click)="capturePhoto()"
+        [disabled]="!isWebcamActive"
+      >
+        <i class="ri-camera-line me-1"></i>
+        Capture
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="closeWebcamModal()"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</dialog>
+
