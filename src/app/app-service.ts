@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AppService {
-  baseUrl: any = 'https://gym-five-blush.vercel.app';
-  // baseUrl : any = 'http://localhost:3000';
+  // baseUrl: any = 'https://gym-five-blush.vercel.app';
+  baseUrl : any = 'http://localhost:3000';
 
   constructor(
     public http: HttpClient,
@@ -143,6 +143,23 @@ export class AppService {
       headers: new HttpHeaders({
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       }),
+    });
+  };
+
+  uploadUserImage = (file: File, uniqueId: string) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('uniqueId', uniqueId);
+    return this.http.post(`${this.baseUrl}/members/uploadUserImage`, formData, {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      }),
+    });
+  };
+
+  deleteUserImage = (uniqueId: string) => {
+    return this.http.post(`${this.baseUrl}/members/deleteUserImage`, { uniqueId }, {
+      headers: this.getHeaders(),
     });
   };
 }
