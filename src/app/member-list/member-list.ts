@@ -61,18 +61,21 @@ export class MemberList implements OnInit {
     const member = this.selectedMember;
     const total = this.calculateTotal(member);
     const invoiceDate = new Date().toLocaleDateString();
-    const invoiceNumber = 'INV-' + Date.now();
+    const invoiceNumber = 'RCPT-' + Date.now();
     const baseUrl = window.location.origin;
-    let packagesHTML = '';
+    let paymentsHTML = '';
     if (member?.memberPackageDetails) {
-      packagesHTML = member.memberPackageDetails.map((pkg: any, index: number) => `
+      const donePackages = member.memberPackageDetails.filter((pkg: any) => pkg.status === 'DONE');
+      donePackages.forEach((pkg: any, index: number) => {
+        const totalPaid = pkg.paymentDetails ? pkg.paymentDetails.reduce((sum: number, payment: any) => sum + Number(payment.amount || 0), 0) : 0;
+        paymentsHTML += `
         <tr>
           <td style="padding: 8px 5px;">${index + 1}</td>
           <td style="padding: 8px 5px;">${pkg.packageName}</td>
-          <td style="padding: 8px 5px;">₹${pkg.fee}</td>
-          <td style="padding: 8px 5px;">₹${pkg.discountedPrice}</td>
+          <td style="padding: 8px 5px;">₹${totalPaid}</td>
         </tr>
-      `).join('');
+        `;
+      });
     }
     return `
       <html>
@@ -223,7 +226,7 @@ export class MemberList implements OnInit {
               </div>
             </div>
             
-            <div class="invoice-title">INVOICE</div>
+            <div class="invoice-title">RECEIPT</div>
             
             <div class="invoice-details">
               <div class="bill-to">
@@ -244,14 +247,13 @@ export class MemberList implements OnInit {
             <table class="table table-bordered" style="margin-bottom: 5px;">
               <thead>
                 <tr>
-                  <th style="width: 5%;">S.No</th>
-                  <th style="width: 50%;">Package</th>
-                  <th style="width: 22%;">Amount</th>
-                  <th style="width: 23%;">Discounted</th>
+                  <th style="width: 10%;">S.No</th>
+                  <th style="width: 60%;">Package</th>
+                  <th style="width: 30%;">Total Paid</th>
                 </tr>
               </thead>
               <tbody>
-                ${packagesHTML}
+                ${paymentsHTML}
               </tbody>
             </table>
             
@@ -308,7 +310,14 @@ export class MemberList implements OnInit {
 
   calculateTotal(member: any): number {
     if (!member || !member.memberPackageDetails) return 0;
-    return member.memberPackageDetails.reduce((sum: number, pkg: any) => sum + (pkg.discountedPrice || pkg.fee), 0);
+    return member.memberPackageDetails
+      .filter((pkg: any) => pkg.status === 'DONE')
+      .reduce((sum: number, pkg: any) => {
+        if (pkg.paymentDetails) {
+          return sum + pkg.paymentDetails.reduce((pkgSum: number, payment: any) => pkgSum + Number(payment.amount || 0), 0);
+        }
+        return sum;
+      }, 0);
   }
 
   generatePDF() {
