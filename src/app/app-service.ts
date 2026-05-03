@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AppService {
-  baseUrl: any = 'https://gym-five-blush.vercel.app';
-  // baseUrl : any = 'http://localhost:3000';
+  // baseUrl: any = 'https://gym-five-blush.vercel.app';
+  baseUrl : any = 'http://localhost:3000';
 
   constructor(
     public http: HttpClient,
@@ -76,6 +76,11 @@ export class AppService {
     this.http.post(`${this.baseUrl}/memberDetailsPackage/saveMemberPackageDetails`, request, {
       headers: this.getHeaders(),
     });
+
+  savePaymentDetails = (request: any) =>
+    this.http.post(`${this.baseUrl}/payment/savePaymentDetails`, request, {
+      headers: this.getHeaders(),
+  });
 
   saveMemberTrainerDetails = (request: any) =>
     this.http.post(`${this.baseUrl}/memberTrainerDetails/saveMemberTrainerDetils`, request, {

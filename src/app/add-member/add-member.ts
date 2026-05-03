@@ -17,11 +17,14 @@ import { Router } from '@angular/router';
 export class AddMember implements OnInit, OnDestroy {
   @ViewChild('delModal') modal!: ElementRef<HTMLDialogElement>;
   @ViewChild('ptDelModal') ptModal!: ElementRef<HTMLDialogElement>;
+  @ViewChild('paymentModal') paymentModal!: ElementRef<HTMLDialogElement>;
   @ViewChild('webcamModal') webcamModal!: ElementRef<HTMLDialogElement>;
   @ViewChild('webcamVideo') webcamVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('webcamCanvas') webcamCanvas!: ElementRef<HTMLCanvasElement>;
   
   selectedPackageToDelete: any = null;
+  selectedPackageForPayment: any = null;
+  paymentAmount: string = '';
   selectedPtToDelete: any = null;
 
   minDate: any = null;
@@ -116,7 +119,8 @@ export class AddMember implements OnInit, OnDestroy {
         this.sharedService.savedMemberDataResponse().planEndDate,
       );
       this.memberDetails.dueDate = this.formatDateForNgModel(
-        this.sharedService.savedMemberDataResponse().dueDate,
+        this.sharedService.savedMemberDataResponse().memberDueDate ??
+          this.sharedService.savedMemberDataResponse().dueDate,
       );
       this.memberDetails.remarks = this.sharedService.savedMemberDataResponse().remarks || '';
       this.memberDetails.gender = this.sharedService.savedMemberDataResponse().gender || '';
@@ -500,6 +504,9 @@ export class AddMember implements OnInit, OnDestroy {
           ? this.memberDetails.endDate
           : null,
         dueDate: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.dueDate)
+          ? this.memberDetails.dueDate
+          : null,
+        memberDueDate: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.dueDate)
           ? this.memberDetails.dueDate
           : null,
         remarks: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.remarks)
@@ -931,6 +938,287 @@ export class AddMember implements OnInit, OnDestroy {
   deletePackage(pkg: any) {
     this.selectedPackageToDelete = pkg;
     this.modal.nativeElement.showModal();
+  }
+
+  packagePaidAmount: number = 0;
+  totalPayable: number = 0;
+  paymentBalance: number = 0;
+
+  openPaymentModal(singlePackage: any) {
+    this.selectedPackageForPayment = singlePackage;
+    this.paymentAmount = '';
+    this.totalPayable = Number(singlePackage?.discountedPrice ?? singlePackage?.fee ?? 0);
+    this.packagePaidAmount = this.calculatePackagePaidAmount(singlePackage);
+    this.paymentBalance = Math.max(this.totalPayable - this.packagePaidAmount, 0);
+    this.paymentModal.nativeElement.showModal();
+  }
+
+  closePaymentModal() {
+    this.paymentModal.nativeElement.close();
+  }
+
+  private calculatePackagePaidAmount(pkg: any): number {
+    if (!pkg?.paymentDetails?.length) {
+      return 0;
+    }
+    return pkg.paymentDetails.reduce((sum: number, payment: any) => sum + Number(payment.amount || 0), 0);
+  }
+
+  savePaymentDetails() {
+    const amountValue = Number(this.paymentAmount);
+    const maxBalance = Number(this.paymentBalance ?? 0);
+
+    if (!this.selectedPackageForPayment) {
+      this.sharedService.snackBar.open('Please select a package for payment.');
+      return;
+    }
+
+    if (!amountValue || amountValue <= 0) {
+      this.sharedService.snackBar.open('Please enter a valid payment amount.');
+      return;
+    }
+
+    if (amountValue > maxBalance) {
+      this.sharedService.snackBar.open('Amount cannot exceed the remaining balance.');
+      return;
+    }
+
+    const request = {
+      memberPackageId: this.selectedPackageForPayment._id,
+      amount: amountValue,
+    };
+
+    this.loaderService.show.set(true);
+    this.appService.savePaymentDetails(request).subscribe(
+      () => {
+        this.loaderService.show.set(false);
+        this.closePaymentModal();
+        this.sharedService.snackBar.open('Payment saved successfully.');
+      },
+      (error: any) => {
+        this.loaderService.show.set(false);
+        this.sharedService.snackBar.open('Error saving payment. Please try again.');
+      },
+    );
+  }
+
+  printPackageReceipt(packageRecord: any) {
+    const member = this.sharedService.savedMemberDataResponse();
+    const total = (packageRecord.paymentDetails || []).reduce((sum: number, payment: any) => sum + Number(payment.amount || 0), 0);
+    const invoiceDate = new Date().toLocaleDateString();
+    const invoiceNumber = 'RCPT-' + Date.now();
+    const baseUrl = window.location.origin;
+    let paymentsHTML = '';
+    if (packageRecord?.paymentDetails) {
+      paymentsHTML = packageRecord.paymentDetails.map((payment: any, index: number) => `
+        <tr>
+          <td style="padding: 8px 5px;">${index + 1}</td>
+          <td style="padding: 8px 5px;">${payment._id}</td>
+          <td style="padding: 8px 5px;">₹${payment.amount}</td>
+          <td style="padding: 8px 5px;">${payment.createdDate ? new Date(payment.createdDate).toLocaleDateString() : ''}</td>
+        </tr>
+      `).join('');
+    }
+    const html = `
+      <html>
+        <head>
+          <title>Z Fitness Receipt</title>
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+          <style>
+            * { margin: 0; padding: 0; }
+            body { 
+              font-family: 'Poppins', sans-serif; 
+              font-size: 13px; 
+              color: #333; 
+              background: white; 
+              padding: 10px; 
+            }
+            .invoice-container { 
+              max-width: 8.5in;
+              height: auto;
+              margin: 0 auto; 
+              background: white; 
+              padding: 20px; 
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+            }
+            .header { 
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+              color: white; 
+              padding: 12px 15px; 
+              display: flex; 
+              justify-content: space-between; 
+              align-items: center; 
+              margin-bottom: 15px;
+              border-radius: 6px;
+            }
+            .logo { max-width: 80px; height: 80px; object-fit: contain; }
+            .company-info { text-align: right; font-size: 11px; line-height: 1.3; }
+            .company-info h4 { margin: 0; font-size: 16px; font-weight: 700; }
+            .invoice-title { 
+              text-align: center; 
+              font-size: 22px; 
+              font-weight: 700; 
+              color: #667eea; 
+              margin: 8px 0;
+            }
+            .invoice-details { 
+              display: flex; 
+              justify-content: space-between; 
+              margin-bottom: 12px; 
+              gap: 15px;
+            }
+            .bill-to, .invoice-info { flex: 1; }
+            .bill-to h6, .invoice-info h6 { 
+              margin-bottom: 6px; 
+              color: #667eea; 
+              font-weight: 600; 
+              font-size: 12px;
+              border-bottom: 1px solid #667eea; 
+              padding-bottom: 2px; 
+            }
+            .bill-to p, .invoice-info p { margin: 3px 0; font-size: 12px; }
+            .table { 
+              margin: 10px 0; 
+              font-size: 12px;
+            }
+            .table th { 
+              background: #667eea; 
+              color: white; 
+              font-weight: 600; 
+              font-size: 11px; 
+              padding: 6px 5px !important;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+            .table td { padding: 6px 5px !important; }
+            .total-section { 
+              text-align: right; 
+              margin: 10px 0;
+              padding: 8px 10px;
+              background: #f8f9fa;
+              border-radius: 4px;
+              border-left: 3px solid #667eea;
+            }
+            .total-section p { 
+              margin: 0; 
+              font-size: 14px; 
+              font-weight: 600; 
+              color: #333; 
+            }
+            .address-section {
+              text-align: center;
+              margin: 15px 0;
+              padding: 10px 0;
+              border-top: 1px solid #ddd;
+            }
+            .address-section h6 {
+              font-size: 12px;
+              font-weight: 600;
+              color: #667eea;
+              margin-bottom: 8px;
+            }
+            .address-img { 
+              max-width: 100%; 
+              max-height: 150px;
+              height: auto;
+              border-radius: 4px;
+            }
+            .footer { 
+              background: #667eea; 
+              color: white; 
+              text-align: center; 
+              padding: 8px; 
+              margin-top: 10px; 
+              font-size: 11px;
+              border-radius: 4px;
+            }
+            .print-btn { 
+              display: block; 
+              margin: 10px auto 0; 
+              padding: 8px 20px; 
+              background: #667eea; 
+              color: white; 
+              border: none; 
+              border-radius: 20px; 
+              font-size: 13px; 
+              font-weight: 600; 
+              cursor: pointer; 
+            }
+            .print-btn:hover { 
+              background: #5a67d8; 
+            }
+            @media print {
+              body { background: white; padding: 0; margin: 0; }
+              .invoice-container { box-shadow: none; height: auto; padding: 0; margin: 0; }
+              .print-btn { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="invoice-container">
+            <div class="header">
+              <img src="${baseUrl}/assets/images/ZFitnessLogo.png" alt="Z Fitness Logo" class="logo">
+              <div class="company-info">
+                <h4>Z Fitness Gym</h4>
+                <p>123 Fitness Street | City, State 12345</p>
+                <p>Phone: (123) 456-7890 | Email: info@zfitness.com</p>
+              </div>
+            </div>
+            
+            <div class="invoice-title">RECEIPT</div>
+            
+            <div class="invoice-details">
+              <div class="bill-to">
+                <h6>Bill To:</h6>
+                <p><strong>${member?.fullName || ''}</strong></p>
+                <p>ID: ${member?.memberNo || ''}</p>
+                <p>${member?.email || ''}</p>
+                <p>${member?.mobileNumber || ''}</p>
+              </div>
+              <div class="invoice-info">
+                <h6>Receipt Details:</h6>
+                <p><strong>#:</strong> ${invoiceNumber}</p>
+                <p><strong>Date:</strong> ${invoiceDate}</p>
+                <p><strong>Package:</strong> ${packageRecord.packageName}</p>
+              </div>
+            </div>
+            
+            <table class="table table-bordered" style="margin-bottom: 5px;">
+              <thead>
+                <tr>
+                  <th style="width: 5%;">S.No</th>
+                  <th style="width: 30%;">Payment ID</th>
+                  <th style="width: 30%;">Amount</th>
+                  <th style="width: 35%;">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${paymentsHTML}
+              </tbody>
+            </table>
+            
+            <div class="total-section">
+              <p>Total Paid: ₹${total}</p>
+            </div>
+            
+            <div class="footer">
+              <p>Thank you for choosing Z Fitness Gym! | Terms: Non-refundable | Contact: info@zfitness.com</p>
+            </div>
+          </div>
+          
+          <button class="print-btn" onclick="window.print()">🖨️ Print & Save PDF</button>
+        </body>
+      </html>
+    `;
+
+    const receiptWindow = window.open('', '_blank', 'width=800,height=600');
+    if (receiptWindow) {
+      receiptWindow.document.write(html);
+      receiptWindow.document.close();
+    }
   }
 
   closeModal() {
