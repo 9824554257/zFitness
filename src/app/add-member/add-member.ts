@@ -119,7 +119,8 @@ export class AddMember implements OnInit, OnDestroy {
         this.sharedService.savedMemberDataResponse().planEndDate,
       );
       this.memberDetails.dueDate = this.formatDateForNgModel(
-        this.sharedService.savedMemberDataResponse().dueDate,
+        this.sharedService.savedMemberDataResponse().memberDueDate ??
+          this.sharedService.savedMemberDataResponse().dueDate,
       );
       this.memberDetails.remarks = this.sharedService.savedMemberDataResponse().remarks || '';
       this.memberDetails.gender = this.sharedService.savedMemberDataResponse().gender || '';
@@ -503,6 +504,9 @@ export class AddMember implements OnInit, OnDestroy {
           ? this.memberDetails.endDate
           : null,
         dueDate: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.dueDate)
+          ? this.memberDetails.dueDate
+          : null,
+        memberDueDate: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.dueDate)
           ? this.memberDetails.dueDate
           : null,
         remarks: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.remarks)
