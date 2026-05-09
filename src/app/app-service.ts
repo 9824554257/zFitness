@@ -21,8 +21,8 @@ export class AppService {
     });
   };
 
-  getAllMemberDetails = () =>
-    this.http.get(`${this.baseUrl}/members/getMemberDetails`, { headers: this.getHeaders() });
+  getAllMemberDetails = (queryParams: string) =>
+    this.http.get(`${this.baseUrl}/members/getMemberDetails?${queryParams}`, { headers: this.getHeaders() });
 
   saveMemberDetails = (request: any) =>
     this.http.post(`${this.baseUrl}/members/saveMemberDetails`, request, {

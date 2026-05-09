@@ -69,6 +69,28 @@
             </div>
           </div>
 
+          <!-- Search Section -->
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <input type="text" class="form-control" placeholder="Search by Name" [(ngModel)]="searchName">
+            </div>
+            <div class="col-md-4">
+              <input type="email" class="form-control" placeholder="Search by Email" [(ngModel)]="searchEmail">
+            </div>
+            <div class="col-md-4">
+              <input type="text" class="form-control" placeholder="Search by Mobile" [(ngModel)]="searchMobile">
+            </div>
+            <div class="col-md-4">
+              <input type="text" class="form-control" placeholder="Search by Member ID" [(ngModel)]="searchMemberId">
+            </div>
+            <div class="col-md-1">
+              <button type="button" class="btn btn-primary w-100 mx-0 px-0" (click)="searchMembers()">Search</button>
+            </div>
+            <div class="col-md-1">
+              <button type="button" class="btn btn-outline-secondary w-100 mx-0 px-0" (click)="clearSearch()">Clear</button>
+            </div>
+          </div>
+
           <!-- Table starts -->
           <div class="table-responsive">
             <table id="basicExample" class="table m-0 align-middle">
@@ -129,6 +151,34 @@
             </table>
           </div>
           <!-- Table ends -->
+
+          <div class="member-pagination-container mt-3">
+            <div class="text-muted small mb-0">
+              Showing <strong>{{ currentPage }}</strong> of <strong>{{ totalPages }}</strong> · <strong>{{ totalItems }}</strong> members
+            </div>
+            <nav aria-label="Member list pagination" *ngIf="totalPages > 1" class="text-center">
+              <ul class="pagination pagination-sm mb-0 justify-content-center">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                  <button class="page-link" type="button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
+                </li>
+                <li class="page-item" *ngFor="let item of paginationItems" [class.active]="item === currentPage" [class.disabled]="item === '...'">
+                  <button
+                    *ngIf="item !== '...'"
+                    class="page-link"
+                    type="button"
+                    (click)="changePage(item)"
+                    [disabled]="item === currentPage"
+                  >
+                    {{ item }}
+                  </button>
+                  <span *ngIf="item === '...'" class="page-link disabled">...</span>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages || totalPages === 0">
+                  <button class="page-link" type="button" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages || totalPages === 0">Next</button>
+                </li>
+              </ul>
+            </nav>
+          </div>
 
           <!-- Modal Delete Row -->
           <dialog #delModal>
