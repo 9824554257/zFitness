@@ -30,6 +30,7 @@ export class MiscMaster {
   getMiscDataFromType() {
     this.loaderService.show.set(true);
     this.miscData = [];
+    this.textValue = '';
     let request = { headerTypes: [this.type] };
     this.appService.getMiscMasterDataFromType(request).subscribe(
       (data: any) => {

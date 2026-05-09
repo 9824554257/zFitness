@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { AppService } from '../app-service';
 import { SharedService } from '../shared-service';
 import { LoaderService } from '../loader-service';
 
 @Component({
   selector: 'app-member-list',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './member-list.html',
   styleUrl: './member-list.css',
   standalone: true,
@@ -17,6 +19,15 @@ export class MemberList implements OnInit {
   selectedMemberToDelete: any = null;
 
   selectedMember: any;
+  currentPage: number = 1;
+  limit: number = 10;
+  totalPages: number = 0;
+  totalItems: number = 0;
+
+  searchName: string = '';
+  searchEmail: string = '';
+  searchMobile: string = '';
+  searchMemberId: string = '';
 
   selectedFile: File | null = null;
   isUploading: boolean = false;
@@ -29,7 +40,24 @@ export class MemberList implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.fetchMemberDetails();
+    this.clearSearch();
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      this.clearSearch();
+    });
+  }
+
+  searchMembers(): void {
+    this.currentPage = 1; // Reset to first page on search
+    this.fetchMemberDetails(1);
+  }
+
+  clearSearch(): void {
+    this.searchName = '';
+    this.searchEmail = '';
+    this.searchMobile = '';
+    this.searchMemberId = '';
+    this.currentPage = 1;
+    this.fetchMemberDetails(1);
   }
 
   openInvoiceModal(member: any) {
@@ -272,19 +300,86 @@ export class MemberList implements OnInit {
     `;
   }
 
-  fetchMemberDetails() {
+  get paginationItems(): Array<number | '...'> {
+    const total = this.totalPages;
+    const current = this.currentPage;
+
+    if (total <= 4) {
+      const pagination: Array<number | '...'> = [];
+      for (let i = 1; i <= total; i++) {
+        pagination.push(i);
+      }
+      return pagination;
+    }
+
+    const pages = new Set<number>();
+    pages.add(1);
+    pages.add(2);
+
+    // Add the two pages around current
+    if (current <= 2) {
+      pages.add(current);
+      if (current + 1 <= total) pages.add(current + 1);
+    } else {
+      if (current - 1 >= 1) pages.add(current - 1);
+      pages.add(current);
+    }
+
+    pages.add(total - 1);
+    pages.add(total);
+
+    // Sort the pages
+    const sortedPages = Array.from(pages).sort((a, b) => a - b);
+
+    // Insert '...' where gaps > 1
+    const pagination: Array<number | '...'> = [];
+    for (let i = 0; i < sortedPages.length; i++) {
+      pagination.push(sortedPages[i]);
+      if (i < sortedPages.length - 1 && sortedPages[i + 1] > sortedPages[i] + 1) {
+        pagination.push('...');
+      }
+    }
+
+    return pagination;
+  }
+
+  fetchMemberDetails(page: number = 1) {
     this.loaderService.show.set(true);
-    this.appService.getAllMemberDetails().subscribe(
+    this.currentPage = page;
+    const queryParams = new URLSearchParams({
+      limit: String(this.limit),
+      page: String(this.currentPage),
+      fullName: this.searchName || '',
+      email: this.searchEmail || '',
+      mobileNumber: this.searchMobile || '',
+      memberNo: this.searchMemberId || ''
+    });
+    this.appService.getAllMemberDetails(queryParams.toString()).subscribe(
       (data: any) => {
         if (!this.sharedService.checkIfValueIsEmpty(data)) {
-          this.sharedService.memberDetails.set(data['data']);
-          this.loaderService.show.set(false);
+          this.sharedService.memberDetails.set(data['data'] || []);
+          this.totalItems = Number(data['totalItems']) || 0;
+          this.totalPages = Number(data['totalPages']) || 0;
+          this.currentPage = Number(data['currentPage']) || this.currentPage;
+          this.limit = Number(data['limit']) || this.limit;
+        } else {
+          this.sharedService.memberDetails.set([]);
+          this.totalItems = 0;
+          this.totalPages = 0;
         }
+        this.loaderService.show.set(false);
       },
       (error: any) => {
         this.loaderService.show.set(false);
       },
     );
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) {
+      return;
+    }
+    this.fetchMemberDetails(page);
   }
 
   editMemberDetails(member: any) {
@@ -296,13 +391,7 @@ export class MemberList implements OnInit {
     this.loaderService.show.set(true);
     this.appService.deleteMemberDetails(member._id).subscribe((data : any) => {
       this.loaderService.show.set(false);
-      // let deltedIndex : any = this.sharedService.memberDetails().findIndex((singleObj : any) => singleObj._id === member._id);
-      // if(deltedIndex !== -1) {
-        this.sharedService.memberDetails.set(
-          this.sharedService.memberDetails().filter((item: any) => item._id !== member._id)
-        );
-        // this.cdr.detectChanges();
-      // }
+      this.fetchMemberDetails(this.currentPage);
     }, (err : any) => {
       this.loaderService.show.set(false);
     })
@@ -373,7 +462,7 @@ export class MemberList implements OnInit {
 
           // Refresh the member list if at least one member was uploaded
           if (successful > 0) {
-            this.fetchMemberDetails();
+            this.fetchMemberDetails(this.currentPage);
           }
         } else {
           // Fallback for unexpected success response
