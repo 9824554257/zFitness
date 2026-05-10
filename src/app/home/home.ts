@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -46,10 +46,12 @@ interface DashboardData {
   imports: [CommonModule, MatButtonModule, MatCardModule, MatIconModule, MatTableModule, MatProgressSpinnerModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Home implements OnInit {
   private _snackBar = inject(MatSnackBar);
   private appService = inject(AppService);
+  private cdr = inject(ChangeDetectorRef);
 
   horizontalPosition: MatSnackBarHorizontalPosition = 'end';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
@@ -76,6 +78,7 @@ export class Home implements OnInit {
     
     this.appService.getDashboardSummary().subscribe({
       next: (response: any) => {
+        console.log('Dashboard response received:', response);
         this.dashboardData = response;
         if (response.success && response.data) {
           this.processDashboardData(response.data);
@@ -83,11 +86,13 @@ export class Home implements OnInit {
           this.errorMessage = response.message || 'Failed to fetch dashboard data';
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Dashboard fetch error:', error);
         this.errorMessage = 'Unable to fetch dashboard data. Please try again later.';
         this.isLoading = false;
+        this.cdr.markForCheck();
         this._snackBar.open(this.errorMessage, 'Close', {
           horizontalPosition: this.horizontalPosition,
           verticalPosition: this.verticalPosition,
