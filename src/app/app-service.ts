@@ -167,4 +167,19 @@ export class AppService {
       headers: this.getHeaders(),
     });
   };
+
+  // Dashboard APIs
+  getDashboardSummary = (startDate?: string, endDate?: string) => {
+    let url = `${this.baseUrl}/api/dashboard/summary`;
+    const params = new URLSearchParams();
+    
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    
+    if (params.toString()) {
+      url += `?${params.toString()}`;
+    }
+    
+    return this.http.get(url, { headers: this.getHeaders() });
+  };
 }
