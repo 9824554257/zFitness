@@ -73,6 +73,30 @@
 
     <!-- Lists Section -->
     <section class="lists-section">
+      <!-- Birthday Today -->
+      <mat-card *ngIf="birthdayToday.length > 0" class="list-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>cake</mat-icon>
+            Birthdays Today
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="list-table">
+            <div class="table-header">
+              <div class="col-name">Name</div>
+              <div class="col-phone">Phone</div>
+              <div class="col-date">Date of Birth</div>
+            </div>
+            <div *ngFor="let member of birthdayToday" class="table-row highlight-today">
+              <div class="col-name">{{ member.memberName }}</div>
+              <div class="col-phone">{{ member.mobileNumber }}</div>
+              <div class="col-date">{{ formatDate(member.dateOfBirth) }}</div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
       <!-- Birthdays This Month -->
       <mat-card *ngIf="birthdaysThisMonth.length > 0" class="list-card">
         <mat-card-header>
@@ -188,7 +212,7 @@
       </mat-card>
 
       <!-- No Data Message -->
-      <div *ngIf="!birthdaysThisMonth.length && !pendingPayments.length && !upcomingDues.length && !expiringPackages.length"
+      <div *ngIf="!birthdayToday.length && !birthdaysThisMonth.length && !pendingPayments.length && !upcomingDues.length && !expiringPackages.length"
         class="no-data-message">
         <mat-icon>info</mat-icon>
         <p>No data to display at the moment</p>
