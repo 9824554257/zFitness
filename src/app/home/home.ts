@@ -34,6 +34,7 @@ interface DashboardData {
       inquiryCountWeek: number;
       inquiryCountMonth: number;
     };
+    birthdayToday: any[];
     birthdaysThisMonth: any[];
     pendingPayments: any[];
     upcomingDues: any[];
@@ -61,6 +62,7 @@ export class Home implements OnInit {
   errorMessage = '';
 
   summaryCards: any[] = [];
+  birthdayToday: any[] = [];
   birthdaysThisMonth: any[] = [];
   pendingPayments: any[] = [];
   upcomingDues: any[] = [];
@@ -143,6 +145,7 @@ export class Home implements OnInit {
       },
     ];
 
+    this.birthdayToday = data.birthdayToday || [];
     this.birthdaysThisMonth = data.birthdaysThisMonth || [];
     this.pendingPayments = data.pendingPayments || [];
     this.upcomingDues = data.upcomingDues || [];

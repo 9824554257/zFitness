@@ -220,6 +220,10 @@
   background-color: #ffeaa7;
 }
 
+.table-row.highlight-today {
+  background-color: #e3f2fd;
+}
+
 .col-name,
 .col-member,
 .col-package,
