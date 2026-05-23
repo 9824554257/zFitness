@@ -38,6 +38,7 @@ export class AddMember implements OnInit, OnDestroy {
   webcamStream: MediaStream | null = null;
   memberDetails: any = {
     memberNumber: '',
+    referenceNumber: '',
     fullName: '',
     emailAddress: '',
     mobileNumber: '',
@@ -76,6 +77,7 @@ export class AddMember implements OnInit, OnDestroy {
       startDate: '',
       endDate: '',
       remarks: '',
+      trainer: '',
     },
   };
 
@@ -93,6 +95,8 @@ export class AddMember implements OnInit, OnDestroy {
     pastDate.setFullYear(today.getFullYear() - 150);
     this.minDate = pastDate.toISOString().split('T')[0];
   }
+
+  staffList: any[] = [];
 
   private formatDateForNgModel(dateValue: any): string {
     if (this.sharedService.checkIfValueIsEmpty(dateValue)) return '';
@@ -129,6 +133,8 @@ export class AddMember implements OnInit, OnDestroy {
       );
       this.memberDetails.joinWeight = this.sharedService.savedMemberDataResponse().joinWeight || '';
       this.memberDetails.joinHeight = this.sharedService.savedMemberDataResponse().joinHeight || '';
+      this.memberDetails.referenceNumber =
+        this.sharedService.savedMemberDataResponse().referenceNumber || '';
       this.memberDetails.age = this.sharedService.savedMemberDataResponse().age || '';
       this.memberDetails.period = this.sharedService.savedMemberDataResponse().period || '';
       this.memberDetails.personalTrainer =
@@ -159,6 +165,17 @@ export class AddMember implements OnInit, OnDestroy {
     this.populateMemberDetailsFromResponse();
     this.fetchPackageDetails();
     this.getMiscDataFromType();
+    // fetch staff for trainer dropdown
+    this.appService.getStaffDetails('').subscribe(
+      (data: any) => {
+        if (!this.sharedService.checkIfValueIsEmpty(data)) {
+          this.staffList = data['data'] || [];
+        }
+      },
+      (error) => {
+        // ignore — non blocking
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -343,6 +360,7 @@ export class AddMember implements OnInit, OnDestroy {
       shiftType: '',
       time: '',
       joinWeight: '',
+      referenceNumber: '',
       paidDate: '',
       packageDetails: {
         packageName: '',
@@ -536,6 +554,9 @@ export class AddMember implements OnInit, OnDestroy {
         ptAmount: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptAmount)
           ? this.memberDetails.ptAmount
           : null,
+        referenceNumber: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.referenceNumber)
+          ? this.memberDetails.referenceNumber
+          : '',
         maritalStatus: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.maritalStatus)
           ? this.memberDetails.maritalStatus
           : '',
@@ -840,6 +861,9 @@ export class AddMember implements OnInit, OnDestroy {
       ptName: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails.ptName)
         ? this.memberDetails.ptDetails.ptName
         : '',
+      trainer: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails.trainer)
+        ? this.memberDetails.ptDetails.trainer
+        : null,
     };
 
     if (!this.sharedService.checkIfValueIsEmpty(this.memberDetails.ptDetails.uniqueId)) {

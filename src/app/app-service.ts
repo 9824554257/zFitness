@@ -72,6 +72,55 @@ export class AppService {
       headers: this.getHeaders(),
     });
 
+  getMemberTrainerDetails = (queryParams: string) =>
+    this.http.get(`${this.baseUrl}/memberTrainerDetails/getMemberTrainerDetails?${queryParams}`, {
+      headers: this.getHeaders(),
+    });
+
+  getStaffDetails = (queryParams: string) =>
+    this.http.get(`${this.baseUrl}/staff/getStaffDetails?${queryParams}`, {
+      headers: this.getHeaders(),
+    });
+
+  fetchStaffByUniqueId = (request: any) =>
+    this.http.post(`${this.baseUrl}/staff/fetchStaffByUniqueId`, request, {
+      headers: this.getHeaders(),
+    });
+
+  saveStaffDetails = (request: any) =>
+    this.http.post(`${this.baseUrl}/staff/saveStaffDetails`, request, {
+      headers: this.getHeaders(),
+    });
+
+  updateStaffByUniqueId = (request: any) =>
+    this.http.put(`${this.baseUrl}/staff/updateStaffByUniqueId`, request, {
+      headers: this.getHeaders(),
+    });
+
+  uploadStaffImage = (file: File, uniqueId: string) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('uniqueId', uniqueId);
+    return this.http.post(`${this.baseUrl}/staff/uploadStaffImage`, formData, {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      }),
+    });
+  };
+
+  deleteStaffImage = (uniqueId: string) =>
+    this.http.post(
+      `${this.baseUrl}/staff/deleteStaffImage`,
+      { uniqueId },
+      { headers: this.getHeaders() },
+    );
+
+  deleteStaffDetail = (staffId: string) =>
+    this.http.request('delete', `${this.baseUrl}/staff/deleteStaffDetail`, {
+      body: { staffId },
+      headers: this.getHeaders(),
+    });
+
   saveMemberPackageDetails = (request: any) =>
     this.http.post(`${this.baseUrl}/memberDetailsPackage/saveMemberPackageDetails`, request, {
       headers: this.getHeaders(),

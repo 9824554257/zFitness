@@ -5,10 +5,68 @@
     <div class="col-sm-12">
       <div class="card">
         <div class="card-header">
-          <h5 class="card-title">Add Staff Details</h5>
+          <h5 class="card-title">{{ isEditMode ? 'Edit Staff Details' : 'Add Staff Details' }}</h5>
         </div>
         <div class="card-body">
           <!-- Row starts -->
+                       <div class="col-12">
+              <div class="d-flex justify-content-center mb-4">
+                <div class="position-relative">
+                  <div class="d-flex align-items-center justify-content-center rounded-circle border bg-light" 
+                       style="width: 120px; height: 120px; overflow: hidden;">
+                    <ng-container *ngIf="currentImageUrl; else defaultIcon">
+                      <img 
+                        [src]="currentImageUrl" 
+                        alt="Staff Photo" 
+                        class="w-100 h-100" 
+                        style="object-fit: cover;"
+                      >
+                    </ng-container>
+                    <ng-template #defaultIcon>
+                      <i class="ri-user-line fs-1 text-muted"></i>
+                    </ng-template>
+                  </div>
+                  <button 
+                    *ngIf="currentImageUrl"
+                    type="button"
+                    class="btn btn-danger btn-sm position-absolute bottom-0 end-0 rounded-circle"
+                    style="width: 32px; height: 32px; padding: 0; font-size: 14px;"
+                    (click)="deleteCurrentImage()"
+                    title="Remove Photo"
+                  >
+                    <i class="ri-delete-bin-line"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center mb-4">
+                <div class="d-flex flex-column align-items-center gap-2">
+                  <div class="d-flex gap-2">
+                    <input
+                      type="file"
+                      class="form-control form-control-sm d-none"
+                      id="staffPhotoFile"
+                      accept="image/*"
+                      (change)="onPhotoFileSelected($event)"
+                    >
+                    <label for="staffPhotoFile" class="btn btn-outline-primary btn-sm">
+                      <i class="ri-upload-line me-1"></i>
+                      Upload Photo
+                    </label>
+                    <button 
+                      type="button" 
+                      class="btn btn-outline-secondary btn-sm"
+                      (click)="triggerStaffFileClick()"
+                    >
+                      <i class="ri-camera-line me-1"></i>
+                      Take Photo
+                    </button>
+                  </div>
+                  <small class="text-muted text-center">
+                    Upload a photo or use webcam to capture.<br>Max size: 1MB
+                  </small>
+                </div>
+              </div>
+            </div>
           <div class="row gx-4">
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
@@ -23,13 +81,13 @@
                 <label class="form-label" for="a1"
                   >Full Name <span class="text-danger">*</span></label
                 >
-                <input type="text" class="form-control" id="a1" placeholder="Enter Full Name" />
+                <input type="text" class="form-control" id="a1" placeholder="Enter Full Name" [(ngModel)]="staffDetails.staffName" name="staffName" />
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a2">Email <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="a2" placeholder="Enter Email" />
+                <input type="text" class="form-control" id="a2" placeholder="Enter Email" [(ngModel)]="staffDetails.email" name="email" />
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -38,10 +96,12 @@
                   >Mobile Number<span class="text-danger">*</span></label
                 >
                 <input
-                  type="email"
+                  type="text"
                   class="form-control"
                   id="a3"
                   placeholder="Enter Mobile Number"
+                  [(ngModel)]="staffDetails.phoneNumber"
+                  name="phoneNumber"
                 />
               </div>
             </div>
@@ -74,8 +134,11 @@
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a6">Designation</label>
-                <select class="form-select" id="a6">
-                  <option value="0">Select</option>
+                <select class="form-select" id="a6" [(ngModel)]="staffDetails.expertise" name="expertise">
+                  <option value="">Select</option>
+                  <option value="PT">PT</option>
+                  <option value="Trainer">Trainer</option>
+                  <option value="Manager">Manager</option>
                 </select>
               </div>
             </div>
@@ -92,10 +155,22 @@
                 ></textarea>
               </div>
             </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="emergencyContactName">Emergency Contact Name</label>
+                <input type="text" class="form-control" id="emergencyContactName" placeholder="Enter Emergency Contact Name" [(ngModel)]="staffDetails.emergencyContactName" name="emergencyContactName" />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
+                <label class="form-label" for="emergencyContactNumber">Emergency Contact Number</label>
+                <input type="text" class="form-control" id="emergencyContactNumber" placeholder="Enter Emergency Contact Number" [(ngModel)]="staffDetails.emergencyContactNumber" name="emergencyContactNumber" />
+              </div>
+            </div>
             <div class="col-sm-12">
               <div class="d-flex gap-2 justify-content-end">
-                <button type="button" class="btn btn-outline-secondary">Cancel</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="cancel()">Cancel</button>
+                <button type="button" class="btn btn-primary" (click)="saveStaff(true)">Save</button>
               </div>
             </div>
           </div>
