@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 export class AppService {
   // baseUrl: any = 'https://gym-five-blush.vercel.app';
   // baseUrl : any = 'http://localhost:3000';
-  baseUrl: any = 'http://103.117.180.141:3000'
+  baseUrl: any = 'http://api.alluresofttech.com/'
 
   constructor(
     public http: HttpClient,
