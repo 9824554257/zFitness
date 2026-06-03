@@ -38,7 +38,7 @@ export class Login implements OnInit {
     };
     let reqLogin = { email: this.emailID, password: this.password };
     this.http
-      .post('http://api.alluresofttech.com//users/login', reqLogin, httpOptions)
+      .post('https://api.alluresofttech.com//users/login', reqLogin, httpOptions)
       .subscribe(
         (data: any) => {
           if (data.token) {
