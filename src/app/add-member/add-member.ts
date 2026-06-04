@@ -39,6 +39,7 @@ export class AddMember implements OnInit, OnDestroy {
   memberDetails: any = {
     memberNumber: '',
     referenceNumber: '',
+    punchInCode: '',
     fullName: '',
     emailAddress: '',
     mobileNumber: '',
@@ -135,6 +136,8 @@ export class AddMember implements OnInit, OnDestroy {
       this.memberDetails.joinHeight = this.sharedService.savedMemberDataResponse().joinHeight || '';
       this.memberDetails.referenceNumber =
         this.sharedService.savedMemberDataResponse().referenceNumber || '';
+      this.memberDetails.punchInCode =
+        this.sharedService.savedMemberDataResponse().punchInCode || '';
       this.memberDetails.age = this.sharedService.savedMemberDataResponse().age || '';
       this.memberDetails.period = this.sharedService.savedMemberDataResponse().period || '';
       this.memberDetails.personalTrainer =
@@ -361,6 +364,7 @@ export class AddMember implements OnInit, OnDestroy {
       time: '',
       joinWeight: '',
       referenceNumber: '',
+      punchInCode: '',
       paidDate: '',
       packageDetails: {
         packageName: '',
@@ -556,6 +560,9 @@ export class AddMember implements OnInit, OnDestroy {
           : null,
         referenceNumber: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.referenceNumber)
           ? this.memberDetails.referenceNumber
+          : '',
+        punchInCode: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.punchInCode)
+          ? this.memberDetails.punchInCode
           : '',
         maritalStatus: !this.sharedService.checkIfValueIsEmpty(this.memberDetails.maritalStatus)
           ? this.memberDetails.maritalStatus

@@ -104,6 +104,22 @@
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
+                <label class="form-label" for="referenceNumber"
+                  >Punch In Code.</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="punchInCode"
+                  name="punchInCode"
+                  [(ngModel)]="memberDetails.punchInCode"
+                  placeholder="Enter Punch In Code."
+                  (beforeinput)="sharedService.blockSpecialCharactersOnInput($event)"
+                />
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-4 col-sm-6">
+              <div class="mb-3">
                 <label class="form-label" for="a1"
                   >Full Name <span class="text-danger">*</span></label
                 >
