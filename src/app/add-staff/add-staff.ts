@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy, ViewChild, ElementRef, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AppService } from '../app-service';
@@ -15,7 +15,15 @@ import { Router } from '@angular/router';
 export class AddStaff implements OnInit, OnDestroy {
   selectedPhotoFile: File | null = null;
   currentImageUrl: string | null = null;
+
+  // Image upload properties
+  isWebcamSupported: any = false;
+  isWebcamActive = signal<any>(false);
+  webcamStream: MediaStream | null = null;
   isEditMode: boolean = false;
+  @ViewChild('webcamModal') webcamModal!: ElementRef<HTMLDialogElement>;
+  @ViewChild('webcamVideo') webcamVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('webcamCanvas') webcamCanvas!: ElementRef<HTMLCanvasElement>;
 
   staffDetails: any = {
     staffName: '',
@@ -41,6 +49,7 @@ export class AddStaff implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.resetStaffDetails();
     this.sharedService.savedStaffDataResponse.set({});
+    this.stopWebcam();
   }
 
   populateStaffDetailsFromResponse() {
@@ -191,4 +200,90 @@ export class AddStaff implements OnInit, OnDestroy {
       }
     );
   }
+
+    openWebcamModal() {
+    this.checkWebcamSupport();
+    if (!this.isWebcamSupported) {
+      this.sharedService.snackBar.open('Webcam not supported on this device', 'Close', { duration: 3000 });
+      return;
+    }
+    this.webcamModal.nativeElement.showModal();
+    this.startWebcam();
+  }
+
+  checkWebcamSupport() {
+    this.isWebcamSupported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  }
+
+  closeWebcamModal() {
+    this.webcamModal.nativeElement.close();
+    this.stopWebcam();
+  }
+
+  startWebcam() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } })
+        .then((stream) => {
+          this.webcamStream = stream;
+          this.isWebcamActive.set(true);
+          if (this.webcamVideo) {
+            this.webcamVideo.nativeElement.srcObject = stream;
+          }
+          this.cdr.detectChanges();
+        })
+        .catch((error) => {
+          console.error('Error accessing webcam:', error);
+          this.isWebcamActive.set(false);
+          
+          if (error.name === 'NotAllowedError') {
+            this.sharedService.snackBar.open('Camera access denied. Please enable camera permissions in your browser settings.', 'Close', { duration: 5000 });
+          } else if (error.name === 'NotFoundError') {
+            this.sharedService.snackBar.open('No camera found on this device.', 'Close', { duration: 3000 });
+          } else if (error.name === 'NotReadableError') {
+            this.sharedService.snackBar.open('Camera is already in use by another application.', 'Close', { duration: 3000 });
+          } else {
+            this.sharedService.snackBar.open('Error accessing webcam. Please try again.', 'Close', { duration: 3000 });
+          }
+          
+          this.closeWebcamModal();
+        });
+    }
+  }
+
+  stopWebcam() {
+    if (this.webcamStream) {
+      this.webcamStream.getTracks().forEach(track => track.stop());
+      this.webcamStream = null;
+    }
+    this.isWebcamActive.set(false);
+  }
+
+  capturePhoto() {
+    if (!this.webcamVideo || !this.webcamCanvas) return;
+
+    const video = this.webcamVideo.nativeElement;
+    const canvas = this.webcamCanvas.nativeElement;
+    const context = canvas.getContext('2d');
+
+    if (context) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob((blob) => {
+        if (blob) {
+          if (blob.size > 1 * 1024 * 1024) {
+            this.sharedService.snackBar.open('Captured photo is too large. Please try again with less detail or lower lighting.', 'Close', { duration: 5000 });
+            return;
+          }
+          const file = new File([blob], 'webcam-photo.jpg', { type: 'image/jpeg' });
+          this.selectedPhotoFile = file;
+          this.currentImageUrl = canvas.toDataURL('image/jpeg');
+          this.closeWebcamModal();
+          this.cdr.detectChanges();
+        }
+      }, 'image/jpeg', 0.8);
+    }
+  }
+  
 }
