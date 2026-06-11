@@ -73,7 +73,7 @@
                 <label class="form-label" for="a1"
                   >Staff Code <span class="text-danger">*</span></label
                 >
-                <input type="text" class="form-control" id="Text1" placeholder="Enter Staff Code" />
+                <input type="text" [(ngModel)]="staffDetails.staffCode" class="form-control" id="Text1" placeholder="Enter Staff Code" />
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -108,7 +108,7 @@
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a3">Age<span class="text-danger">*</span></label>
-                <input type="email" class="form-control" id="Email1" placeholder="Enter Age" />
+                <input type="number" class="form-control" id="age" placeholder="Enter Age" [(ngModel)]="staffDetails.age" />
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -116,25 +116,25 @@
                 <label class="form-label" for="a4"
                   >Date of Birth <span class="text-danger">*</span></label
                 >
-                <input type="date" class="form-control" id="a4" placeholder="Enter DOB" />
+                <input type="date" class="form-control" id="a4" placeholder="Enter DOB" [(ngModel)]="staffDetails.dateOfBirth" />
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a5">Joining Date</label>
-                <input type="date" class="form-control" id="Date1" placeholder="Enter DOB" />
+                <input type="date" class="form-control" id="Date1" placeholder="Enter DOB" [(ngModel)]="staffDetails.joinDate"  />
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a5">Left Date</label>
-                <input type="date" class="form-control" id="Date3" placeholder="Enter DOB" />
+                <input type="date" class="form-control" id="Date3" placeholder="Enter Left Date" [(ngModel)]="staffDetails.leftDate" />
               </div>
             </div>
             <div class="col-xxl-3 col-lg-4 col-sm-6">
               <div class="mb-3">
                 <label class="form-label" for="a6">Designation</label>
-                <select class="form-select" id="a6" [(ngModel)]="staffDetails.expertise" name="expertise">
+                <select class="form-select" id="a6" [(ngModel)]="staffDetails.designation" name="designation">
                   <option value="">Select</option>
                   <option value="PT">PT</option>
                   <option value="Trainer">Trainer</option>
@@ -146,6 +146,7 @@
               <div class="mb-3">
                 <label class="form-label" for="a5">Address</label>
                 <textarea
+                  [(ngModel)]="staffDetails.address"
                   type="remarks"
                   class="form-control"
                   id="remarks"

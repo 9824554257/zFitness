@@ -1,6 +1,6 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy, ViewChild, ElementRef, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { AppService } from '../app-service';
 import { SharedService } from '../shared-service';
 import { LoaderService } from '../loader-service';
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-add-staff',
   imports: [CommonModule, FormsModule],
+  providers: [DatePipe],
   templateUrl: './add-staff.html',
   styleUrl: './add-staff.css',
 })
@@ -26,7 +27,14 @@ export class AddStaff implements OnInit, OnDestroy {
   @ViewChild('webcamCanvas') webcamCanvas!: ElementRef<HTMLCanvasElement>;
 
   staffDetails: any = {
+    staffCode: '',
     staffName: '',
+    age: '', 
+    dateOfBirth: '', 
+    joinDate: '', 
+    leftDate: '', 
+    designation: '', 
+    address: '',
     email: '',
     phoneNumber: '',
     expertise: '',
@@ -40,6 +48,7 @@ export class AddStaff implements OnInit, OnDestroy {
     public cdr: ChangeDetectorRef,
     public loaderService: LoaderService,
     public router: Router,
+    private datePipe: DatePipe,
   ) {}
 
   ngOnInit(): void {
@@ -56,8 +65,15 @@ export class AddStaff implements OnInit, OnDestroy {
     const savedStaff = this.sharedService.savedStaffDataResponse();
     if (!this.sharedService.checkIfValueIsEmpty(savedStaff)) {
       this.isEditMode = true;
+      this.staffDetails.staffCode = savedStaff.staffCode || '';
       this.staffDetails.staffName = savedStaff.staffName || '';
       this.staffDetails.email = savedStaff.email || '';
+      this.staffDetails.age = savedStaff.age || '';
+      this.staffDetails.dateOfBirth = !this.sharedService.checkIfValueIsEmpty(savedStaff.dateOfBirth) ? this.datePipe.transform(new Date(savedStaff.dateOfBirth), 'yyyy-MM-dd') : '', 
+      this.staffDetails.joinDate = !this.sharedService.checkIfValueIsEmpty(savedStaff.joinDate) ? this.datePipe.transform(new Date(savedStaff.joinDate), 'yyyy-MM-dd') : '', 
+      this.staffDetails.leftDate = !this.sharedService.checkIfValueIsEmpty(savedStaff.leftDate) ? this.datePipe.transform(new Date(savedStaff.leftDate), 'yyyy-MM-dd') : '', 
+      this.staffDetails.designation = savedStaff.designation || '';
+      this.staffDetails.address = savedStaff.address || '';
       this.staffDetails.phoneNumber = savedStaff.phoneNumber || '';
       this.staffDetails.expertise = savedStaff.expertise || '';
       this.staffDetails.emergencyContactName = savedStaff.emergencyContactName || '';
@@ -68,7 +84,14 @@ export class AddStaff implements OnInit, OnDestroy {
 
   resetStaffDetails() {
     this.staffDetails = {
+      staffCode: '',
       staffName: '',
+      age: '', 
+      dateOfBirth: '', 
+      joinDate: '', 
+      leftDate: '', 
+      designation: '', 
+      address: '',
       email: '',
       phoneNumber: '',
       expertise: '',
@@ -133,14 +156,21 @@ export class AddStaff implements OnInit, OnDestroy {
 
   saveStaff(redirect: boolean) {
     // Basic validation
-    if (!this.staffDetails.staffName || !this.staffDetails.email || !this.staffDetails.phoneNumber) {
-      this.sharedService.snackBar.open('Name, email and phone are mandatory');
+    if (!this.staffDetails.staffCode || !this.staffDetails.age || !this.staffDetails.dateOfBirth || !this.staffDetails.staffName || !this.staffDetails.email || !this.staffDetails.phoneNumber) {
+      this.sharedService.snackBar.open('Code, age, date of Birth, Name, email and phone are mandatory');
       return;
     }
 
     this.loaderService.show.set(true);
     const request: any = {
+      staffCode: this.staffDetails.staffCode,
       staffName: this.staffDetails.staffName,
+      age: this.staffDetails.age, 
+      dateOfBirth: !this.sharedService.checkIfValueIsEmpty(this.staffDetails.dateOfBirth) ? this.datePipe.transform(new Date(this.staffDetails.dateOfBirth), 'yyyy-MM-dd') : '', 
+      joinDate: !this.sharedService.checkIfValueIsEmpty(this.staffDetails.joinDate) ? this.datePipe.transform(new Date(this.staffDetails.joinDate), 'yyyy-MM-dd') : '', 
+      leftDate: !this.sharedService.checkIfValueIsEmpty(this.staffDetails.leftDate) ? this.datePipe.transform(new Date(this.staffDetails.leftDate), 'yyyy-MM-dd') : '', 
+      designation: this.staffDetails.designation, 
+      address: this.staffDetails.address,
       email: this.staffDetails.email,
       phoneNumber: this.staffDetails.phoneNumber,
       expertise: this.staffDetails.expertise || '',
