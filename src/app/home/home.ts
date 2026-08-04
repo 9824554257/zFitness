@@ -3,16 +3,11 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MatSnackBar,
-  MatSnackBarAction,
-  MatSnackBarActions,
   MatSnackBarHorizontalPosition,
-  MatSnackBarLabel,
-  MatSnackBarRef,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AppService } from '../app-service';
 
@@ -35,7 +30,7 @@ interface DashboardData {
       inquiryCountMonth: number;
     };
     birthdayToday: any[];
-    birthdaysThisMonth: any[];
+    followUpsToday: any[];
     pendingPayments: any[];
     upcomingDues: any[];
     expiringPackages: any[];
@@ -44,7 +39,7 @@ interface DashboardData {
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, MatButtonModule, MatCardModule, MatIconModule, MatTableModule, MatProgressSpinnerModule],
+  imports: [CommonModule, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,7 +58,7 @@ export class Home implements OnInit {
 
   summaryCards: any[] = [];
   birthdayToday: any[] = [];
-  birthdaysThisMonth: any[] = [];
+  followUpsToday: any[] = [];
   pendingPayments: any[] = [];
   upcomingDues: any[] = [];
   expiringPackages: any[] = [];
@@ -146,14 +141,41 @@ export class Home implements OnInit {
     ];
 
     this.birthdayToday = data.birthdayToday || [];
-    this.birthdaysThisMonth = data.birthdaysThisMonth || [];
+    this.followUpsToday = this.getFollowUpsToday(data);
     this.pendingPayments = data.pendingPayments || [];
     this.upcomingDues = data.upcomingDues || [];
     this.expiringPackages = data.expiringPackages || [];
   }
 
+  private getFollowUpsToday(data: any): any[] {
+    const today = new Date();
+    const followUps = Array.isArray(data.followUpsToday) ? data.followUpsToday : [];
+
+    return followUps.filter((item: any) => {
+      if (!item.followUpDate) {
+        return true; // backend may already send only today's follow-ups without the date field
+      }
+
+      const followUpDate = new Date(item.followUpDate);
+      return (
+        followUpDate.getFullYear() === today.getFullYear() &&
+        followUpDate.getMonth() === today.getMonth() &&
+        followUpDate.getDate() === today.getDate()
+      );
+    });
+  }
+
   formatDate(date: string): string {
-    return new Date(date).toLocaleDateString('en-US', {
+    if (!date) {
+      return '—';
+    }
+
+    const parsedDate = new Date(date);
+    if (Number.isNaN(parsedDate.getTime())) {
+      return '—';
+    }
+
+    return parsedDate.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

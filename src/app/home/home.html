@@ -73,8 +73,7 @@
 
     <!-- Lists Section -->
     <section class="lists-section">
-      <!-- Birthday Today -->
-      <mat-card *ngIf="birthdayToday.length > 0" class="list-card">
+      <mat-card *ngIf="birthdayToday.length > 0" class="list-card birthday-card">
         <mat-card-header>
           <mat-card-title>
             <mat-icon>cake</mat-icon>
@@ -82,140 +81,85 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div class="list-table">
-            <div class="table-header">
-              <div class="col-name">Name</div>
-              <div class="col-phone">Phone</div>
-              <div class="col-date">Date of Birth</div>
-            </div>
-            <div *ngFor="let member of birthdayToday" class="table-row highlight-today">
-              <div class="col-name">{{ member.memberName }}</div>
-              <div class="col-phone">{{ member.mobileNumber }}</div>
-              <div class="col-date">{{ formatDate(member.dateOfBirth) }}</div>
-            </div>
+          <div class="list-table birthday-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Date of Birth</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let member of birthdayToday">
+                  <td>{{ member.memberName }}</td>
+                  <td>{{ member.mobileNumber }}</td>
+                  <td>{{ formatDate(member.dateOfBirth) }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </mat-card-content>
       </mat-card>
 
-      <!-- Birthdays This Month -->
-      <mat-card *ngIf="birthdaysThisMonth.length > 0" class="list-card">
-        <mat-card-header>
-          <mat-card-title>
-            <mat-icon>cake</mat-icon>
-            Birthdays This Month
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="list-table">
-            <div class="table-header">
-              <div class="col-name">Name</div>
-              <div class="col-phone">Phone</div>
-              <div class="col-date">Date of Birth</div>
-            </div>
-            <div *ngFor="let member of birthdaysThisMonth" class="table-row">
-              <div class="col-name">{{ member.memberName }}</div>
-              <div class="col-phone">{{ member.mobileNumber }}</div>
-              <div class="col-date">{{ formatDate(member.dateOfBirth) }}</div>
-            </div>
+      <div class="dashboard-two-column-grid">
+        <section class="data-panel">
+          <div class="panel-header">
+            <h3>Follow-ups today</h3>
           </div>
-          <div *ngIf="birthdaysThisMonth.length === 0" class="empty-message">
-            No birthdays this month
+          <div class="table-scroll-wrap">
+            <table *ngIf="followUpsToday.length > 0; else followUpsEmpty">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Number</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of followUpsToday">
+                  <td>{{ item.name || '—' }}</td>
+                  <td>{{ item.number || '—' }}</td>
+                  <td>{{ item.email || '—' }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <ng-template #followUpsEmpty>
+              <div class="empty-state">No follow-ups scheduled for today.</div>
+            </ng-template>
           </div>
-        </mat-card-content>
-      </mat-card>
+        </section>
 
-      <!-- Pending Payments -->
-      <mat-card *ngIf="pendingPayments.length > 0" class="list-card">
-        <mat-card-header>
-          <mat-card-title>
-            <mat-icon>warning</mat-icon>
-            Pending Payments
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="list-table">
-            <div class="table-header">
-              <div class="col-member">Member</div>
-              <div class="col-package">Package</div>
-              <div class="col-amount">Amount Due</div>
-              <div class="col-date">Due Date</div>
-              <div class="col-status">Status</div>
-            </div>
-            <div *ngFor="let payment of pendingPayments" class="table-row highlight-warn">
-              <div class="col-member">{{ payment.memberName }}</div>
-              <div class="col-package">{{ payment.packageName }}</div>
-              <div class="col-amount">₹{{ payment.dueAmount }}</div>
-              <div class="col-date">{{ formatDate(payment.dueDate) }}</div>
-              <div class="col-status">
-                <span *ngIf="payment.daysOverdue > 0" class="overdue">
-                  {{ payment.daysOverdue }} days overdue
-                </span>
-                <span *ngIf="payment.daysOverdue <= 0" class="pending">Pending</span>
-              </div>
-            </div>
+        <section class="data-panel">
+          <div class="panel-header">
+            <h3>Expiring in next 3 days</h3>
           </div>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Upcoming Dues -->
-      <mat-card *ngIf="upcomingDues.length > 0" class="list-card">
-        <mat-card-header>
-          <mat-card-title>
-            <mat-icon>schedule</mat-icon>
-            Upcoming Dues
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="list-table">
-            <div class="table-header">
-              <div class="col-member">Member</div>
-              <div class="col-package">Package</div>
-              <div class="col-amount">Amount Due</div>
-              <div class="col-date">Due Date</div>
-              <div class="col-days">Days Remaining</div>
-            </div>
-            <div *ngFor="let due of upcomingDues" class="table-row">
-              <div class="col-member">{{ due.memberName }}</div>
-              <div class="col-package">{{ due.packageName }}</div>
-              <div class="col-amount">₹{{ due.dueAmount }}</div>
-              <div class="col-date">{{ formatDate(due.dueDate) }}</div>
-              <div class="col-days">{{ due.remainingDays }}</div>
-            </div>
+          <div class="table-scroll-wrap">
+            <table *ngIf="expiringPackages.length > 0; else expiringPackagesEmpty">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Phone</th>
+                  <th>Package</th>
+                  <th>End date</th>
+                  <th>Days left</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of expiringPackages">
+                  <td>{{ item.memberName || '—' }}</td>
+                  <td>{{ item.phoneNumber || item.mobileNumber || '—' }}</td>
+                  <td>{{ item.packageName || '—' }}</td>
+                  <td>{{ formatDate(item.endDate) }}</td>
+                  <td>{{ item.daysLeft ?? item.remainingDays ?? '—' }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <ng-template #expiringPackagesEmpty>
+              <div class="empty-state">No packages are expiring in the next 3 days.</div>
+            </ng-template>
           </div>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Expiring Packages -->
-      <mat-card *ngIf="expiringPackages.length > 0" class="list-card">
-        <mat-card-header>
-          <mat-card-title>
-            <mat-icon>event</mat-icon>
-            Expiring Packages (Next 7 Days)
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="list-table">
-            <div class="table-header">
-              <div class="col-member">Member</div>
-              <div class="col-package">Package</div>
-              <div class="col-date">End Date</div>
-              <div class="col-days">Days Remaining</div>
-            </div>
-            <div *ngFor="let pkg of expiringPackages" class="table-row highlight-expire">
-              <div class="col-member">{{ pkg.memberName }}</div>
-              <div class="col-package">{{ pkg.packageName }}</div>
-              <div class="col-date">{{ formatDate(pkg.endDate) }}</div>
-              <div class="col-days">{{ pkg.remainingDays }}</div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- No Data Message -->
-      <div *ngIf="!birthdayToday.length && !birthdaysThisMonth.length && !pendingPayments.length && !upcomingDues.length && !expiringPackages.length"
-        class="no-data-message">
-        <mat-icon>info</mat-icon>
-        <p>No data to display at the moment</p>
+        </section>
       </div>
     </section>
   </div>
