@@ -28,6 +28,7 @@ export class MemberList implements OnInit {
   searchEmail: string = '';
   searchMobile: string = '';
   searchMemberId: string = '';
+  punchInCode: string = '';
 
   selectedFile: File | null = null;
   isUploading: boolean = false;
@@ -56,6 +57,7 @@ export class MemberList implements OnInit {
     this.searchEmail = '';
     this.searchMobile = '';
     this.searchMemberId = '';
+    this.punchInCode = '';
     this.currentPage = 1;
     this.fetchMemberDetails(1);
   }
@@ -352,7 +354,8 @@ export class MemberList implements OnInit {
       fullName: this.searchName || '',
       email: this.searchEmail || '',
       mobileNumber: this.searchMobile || '',
-      memberNo: this.searchMemberId || ''
+      memberNo: this.searchMemberId || '',
+      punchInCode: this.punchInCode || ''
     });
     this.appService.getAllMemberDetails(queryParams.toString()).subscribe(
       (data: any) => {
