@@ -62,6 +62,12 @@ export class MemberList implements OnInit {
     this.fetchMemberDetails(1);
   }
 
+  onImageError(event: any): void {
+    // Handle broken image by setting a placeholder
+    event.target.src = '';
+    event.target.style.display = 'none';
+  }
+
   openInvoiceModal(member: any) {
     this.selectedMember = member;
     const invoiceWindow = window.open('', '_blank', 'width=800,height=600');
