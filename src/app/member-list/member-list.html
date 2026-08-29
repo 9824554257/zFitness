@@ -99,6 +99,7 @@
             <table id="basicExample" class="table m-0 align-middle">
               <thead>
                 <tr>
+                  <th>Photo</th>
                   <th>#</th>
                   <th>Name</th>
                   <th>Age</th>
@@ -112,6 +113,20 @@
               <tbody>
                 @for (member of sharedService.memberDetails(); track member._id) {
                   <tr>
+                    <td class="member-photo-cell">
+                      <div class="member-avatar">
+                        <ng-container *ngIf="member.userImageUrl; else defaultPhoto">
+                          <img 
+                            [src]="member.userImageUrl" 
+                            alt="{{ member.fullName }}" 
+                            (error)="onImageError($event)"
+                          >
+                        </ng-container>
+                        <ng-template #defaultPhoto>
+                          <i class="ri-user-line"></i>
+                        </ng-template>
+                      </div>
+                    </td>
                     <td>{{ member.memberNo }}</td>
                     <td>{{ member.fullName }}</td>
                     <td>{{ member.age }}</td>
