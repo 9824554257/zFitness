@@ -161,6 +161,72 @@
           </div>
         </section>
       </div>
+
+      <div class="dashboard-two-column-grid today-records-grid">
+        <section class="data-panel">
+          <div class="panel-header">
+            <h3>New members today ({{ membersAddedToday.length }})</h3>
+          </div>
+          <div class="table-scroll-wrap">
+            <table *ngIf="membersAddedToday.length > 0; else membersAddedTodayEmpty">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Member no.</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let member of membersAddedToday">
+                  <td>{{ member.fullName || '—' }}</td>
+                  <td>{{ member.memberNo || '—' }}</td>
+                  <td>{{ member.mobileNumber || '—' }}</td>
+                  <td>{{ member.email || '—' }}</td>
+                  <td>{{ formatDate(member.createdDate) }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <ng-template #membersAddedTodayEmpty>
+              <div class="empty-state">No members were added today.</div>
+            </ng-template>
+          </div>
+        </section>
+
+        <section class="data-panel">
+          <div class="panel-header">
+            <h3>New inquiries today ({{ inquiriesAddedToday.length }})</h3>
+          </div>
+          <div class="table-scroll-wrap">
+            <table *ngIf="inquiriesAddedToday.length > 0; else inquiriesAddedTodayEmpty">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                  <th>Package</th>
+                  <th>Follow-up</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let inquiry of inquiriesAddedToday">
+                  <td>{{ inquiry.fullName || '—' }}</td>
+                  <td>{{ inquiry.mobileNumber || '—' }}</td>
+                  <td>{{ inquiry.email || '—' }}</td>
+                  <td>{{ inquiry.packageType || '—' }}</td>
+                  <td>{{ formatDate(inquiry.followUpDate) }}</td>
+                  <td>{{ formatDate(inquiry.createdDate) }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <ng-template #inquiriesAddedTodayEmpty>
+              <div class="empty-state">No inquiries were added today.</div>
+            </ng-template>
+          </div>
+        </section>
+      </div>
     </section>
   </div>
 </div>
