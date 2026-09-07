@@ -9,6 +9,7 @@ import {
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router } from '@angular/router';
 import { AppService } from '../app-service';
 
 interface DashboardData {
@@ -34,6 +35,8 @@ interface DashboardData {
     pendingPayments: any[];
     upcomingDues: any[];
     expiringPackages: any[];
+    membersAddedToday: any[];
+    inquiriesAddedToday: any[];
   };
 }
 
@@ -48,6 +51,7 @@ export class Home implements OnInit {
   private _snackBar = inject(MatSnackBar);
   private appService = inject(AppService);
   private cdr = inject(ChangeDetectorRef);
+  private router = inject(Router);
 
   horizontalPosition: MatSnackBarHorizontalPosition = 'end';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
@@ -62,6 +66,8 @@ export class Home implements OnInit {
   pendingPayments: any[] = [];
   upcomingDues: any[] = [];
   expiringPackages: any[] = [];
+  membersAddedToday: any[] = [];
+  inquiriesAddedToday: any[] = [];
 
   constructor() {}
 
@@ -75,7 +81,6 @@ export class Home implements OnInit {
     
     this.appService.getDashboardSummary().subscribe({
       next: (response: any) => {
-        console.log('Dashboard response received:', response);
         this.dashboardData = response;
         if (response.success && response.data) {
           this.processDashboardData(response.data);
@@ -87,7 +92,13 @@ export class Home implements OnInit {
       },
       error: (error) => {
         console.error('Dashboard fetch error:', error);
-        this.errorMessage = 'Unable to fetch dashboard data. Please try again later.';
+        if (error.status === 401) {
+          sessionStorage.removeItem('token');
+          this.router.navigate(['/login']);
+          return;
+        }
+
+        this.errorMessage = error.error?.message || error.message || 'Unable to fetch dashboard data. Please try again later.';
         this.isLoading = false;
         this.cdr.markForCheck();
         this._snackBar.open(this.errorMessage, 'Close', {
@@ -145,6 +156,8 @@ export class Home implements OnInit {
     this.pendingPayments = data.pendingPayments || [];
     this.upcomingDues = data.upcomingDues || [];
     this.expiringPackages = data.expiringPackages || [];
+    this.membersAddedToday = Array.isArray(data.membersAddedToday) ? data.membersAddedToday : [];
+    this.inquiriesAddedToday = Array.isArray(data.inquiriesAddedToday) ? data.inquiriesAddedToday : [];
   }
 
   private getFollowUpsToday(data: any): any[] {
