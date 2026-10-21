@@ -2,6 +2,40 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
+export type PauseKind = 'package' | 'trainer';
+
+export interface PausePeriod {
+  _id: string;
+  fromDate: string;
+  toDate: string;
+  remarks: string;
+  createdAt: string;
+}
+
+export type MemberPeriodStatus = 'active' | 'inactive' | 'inactive_due_to_pause';
+
+export interface PausableMemberRecord {
+  _id: string;
+  startDate: string | null;
+  endDate: string | null;
+  pausePeriods: PausePeriod[];
+  isPaused: boolean;
+  isActiveNow: boolean;
+  status: MemberPeriodStatus;
+}
+
+export interface PauseRequest {
+  uniqueId: string;
+  fromDate: string;
+  toDate: string;
+  remarks: string;
+}
+
+export interface PauseResponse {
+  message: string;
+  data: PausableMemberRecord;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -126,6 +160,19 @@ export class AppService {
     this.http.post(`${this.baseUrl}/memberDetailsPackage/saveMemberPackageDetails`, request, {
       headers: this.getHeaders(),
     });
+
+  pauseMemberDetail = (
+    kind: PauseKind,
+    request: PauseRequest,
+  ) => {
+    const path = kind === 'package'
+      ? '/memberDetailsPackage/pauseMemberPackageDetails'
+      : '/memberTrainerDetails/pauseMemberTrainerDetails';
+
+    return this.http.post<PauseResponse>(`${this.baseUrl}${path}`, request, {
+      headers: this.getHeaders(),
+    });
+  };
 
   savePaymentDetails = (request: any) =>
     this.http.post(`${this.baseUrl}/payment/savePaymentDetails`, request, {

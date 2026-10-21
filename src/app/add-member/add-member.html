@@ -483,6 +483,7 @@
                         <th>Discounted Price</th>
                         <th>Start Date</th>
                         <th>End Date</th>
+                        <th>Status / Pause history</th>
                         <th>Remarks</th>
                         <!-- <th>Created User</th>
                         <th>Master Package ID</th> -->
@@ -498,13 +499,38 @@
                           <td>{{ singlePackage.packageName }}</td>
                           <td>{{ singlePackage.fee }}</td>
                           <td>{{ singlePackage.discountedPrice }}</td>
-                          <td>{{ singlePackage.startDate | date:'yyyy-MM-dd' }}</td>
-                          <td>{{ singlePackage.endDate | date:'yyyy-MM-dd' }}</td>
+                          <td>{{ formatCalendarDate(singlePackage.startDate) }}</td>
+                          <td>{{ formatCalendarDate(singlePackage.endDate) }}</td>
+                          <td>
+                            <span
+                              class="badge"
+                              [class.bg-success]="singlePackage.status === 'active'"
+                              [class.bg-secondary]="singlePackage.status === 'inactive' || !singlePackage.status"
+                              [class.bg-danger]="singlePackage.status === 'inactive_due_to_pause'"
+                            >{{ pauseStatusLabel(singlePackage.status) }}</span>
+                            <div class="small mt-2">
+                              <strong>Pause history</strong>
+                              @for (period of singlePackage.pausePeriods ?? []; track period._id) {
+                                <div>{{ formatCalendarDate(period.fromDate) }} – {{ formatCalendarDate(period.toDate) }}: {{ period.remarks }}</div>
+                              } @empty {
+                                <div class="text-muted">No pause history</div>
+                              }
+                            </div>
+                          </td>
                           <td>{{ singlePackage.remarks }}</td>
                           <!-- <td>{{ singlePackage.createdUser }}</td>
                           <td>{{ singlePackage.masterPackageId }}</td> -->
                           <td>
                             <div class="d-inline-flex gap-1">
+                              <button
+                                class="btn btn-outline-warning btn-sm"
+                                type="button"
+                                title="Pause package"
+                                [disabled]="!singlePackage.endDate"
+                                (click)="openPauseDialog('package', singlePackage)"
+                              >
+                                Pause package
+                              </button>
                               <button
                                 class="btn btn-outline-primary btn-sm"
                                 *ngIf="singlePackage.paymentDetails?.length > 0"
@@ -776,6 +802,7 @@
                         <th>Amount</th>
                         <th>Start Date</th>
                         <th>End Date</th>
+                        <th>Status / Pause history</th>
                         <th>Remarks</th>
                         <th>Actions</th>
                       </tr>
@@ -789,11 +816,36 @@
                           <td>{{ singlePt.ptName }}</td>
                           <td>{{ singlePt.duration }}</td>
                           <td>{{ singlePt.amount }}</td>
-                          <td>{{ singlePt.startDate | date:'yyyy-MM-dd' }}</td>
-                          <td>{{ singlePt.endDate | date:'yyyy-MM-dd' }}</td>
+                          <td>{{ formatCalendarDate(singlePt.startDate) }}</td>
+                          <td>{{ formatCalendarDate(singlePt.endDate) }}</td>
+                          <td>
+                            <span
+                              class="badge"
+                              [class.bg-success]="singlePt.status === 'active'"
+                              [class.bg-secondary]="singlePt.status === 'inactive' || !singlePt.status"
+                              [class.bg-danger]="singlePt.status === 'inactive_due_to_pause'"
+                            >{{ pauseStatusLabel(singlePt.status) }}</span>
+                            <div class="small mt-2">
+                              <strong>Pause history</strong>
+                              @for (period of singlePt.pausePeriods ?? []; track period._id) {
+                                <div>{{ formatCalendarDate(period.fromDate) }} – {{ formatCalendarDate(period.toDate) }}: {{ period.remarks }}</div>
+                              } @empty {
+                                <div class="text-muted">No pause history</div>
+                              }
+                            </div>
+                          </td>
                           <td>{{ singlePt.remarks }}</td>
                           <td>
                             <div class="d-inline-flex gap-1">
+                              <button
+                                class="btn btn-outline-warning btn-sm"
+                                type="button"
+                                title="Pause trainer"
+                                [disabled]="!singlePt.endDate"
+                                (click)="openPauseDialog('trainer', singlePt)"
+                              >
+                                Pause trainer
+                              </button>
                               <button
                                 class="btn btn-outline-success btn-sm"
                                 type="button"
@@ -843,6 +895,69 @@
         </dialog>
       </div>
     </div>
+
+<dialog #pauseModal aria-labelledby="pause-dialog-title">
+  <div class="modal-header">
+    <h5 id="pause-dialog-title">Pause {{ pauseKind === 'package' ? 'package' : 'trainer' }}</h5>
+    <button type="button" class="btn-close-x" aria-label="Close" (click)="closePauseDialog()">&times;</button>
+  </div>
+  <div class="modal-body" *ngIf="pauseTarget as target">
+    <p *ngIf="!target.endDate" class="text-danger" role="alert">
+      This record needs an end date before it can be paused.
+    </p>
+    <form (ngSubmit)="savePause()">
+      <div class="mb-3">
+        <label class="form-label" for="pauseFromDate">From date</label>
+        <input
+          id="pauseFromDate"
+          class="form-control"
+          type="date"
+          name="pauseFromDate"
+          [(ngModel)]="pauseForm.fromDate"
+          [min]="formatDateInput(target.startDate)"
+          [max]="formatDateInput(target.endDate)"
+          [disabled]="!target.endDate || savingPause"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="pauseToDate">To date</label>
+        <input
+          id="pauseToDate"
+          class="form-control"
+          type="date"
+          name="pauseToDate"
+          [(ngModel)]="pauseForm.toDate"
+          [min]="formatDateInput(target.startDate)"
+          [max]="formatDateInput(target.endDate)"
+          [disabled]="!target.endDate || savingPause"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="pauseRemarks">Remarks</label>
+        <textarea
+          id="pauseRemarks"
+          class="form-control"
+          name="pauseRemarks"
+          [(ngModel)]="pauseForm.remarks"
+          maxlength="500"
+          [disabled]="savingPause"
+          required
+        ></textarea>
+      </div>
+      <p *ngIf="pauseError" class="text-danger" role="alert">{{ pauseError }}</p>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closePauseDialog()" [disabled]="savingPause">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="savingPause || !target.endDate">
+          {{ savingPause ? 'Saving...' : 'Save pause' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</dialog>
 <!-- Row ends -->
 
 <!-- Webcam Modal -->

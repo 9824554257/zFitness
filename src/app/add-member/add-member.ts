@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AppService } from '../app-service';
+import { AppService, MemberPeriodStatus, PauseKind } from '../app-service';
 import { SharedService } from '../shared-service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { LoaderService } from '../loader-service';
@@ -19,6 +19,7 @@ export class AddMember implements OnInit, OnDestroy {
   @ViewChild('ptDelModal') ptModal!: ElementRef<HTMLDialogElement>;
   @ViewChild('paymentModal') paymentModal!: ElementRef<HTMLDialogElement>;
   @ViewChild('webcamModal') webcamModal!: ElementRef<HTMLDialogElement>;
+  @ViewChild('pauseModal') pauseModal!: ElementRef<HTMLDialogElement>;
   @ViewChild('webcamVideo') webcamVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('webcamCanvas') webcamCanvas!: ElementRef<HTMLCanvasElement>;
   
@@ -26,6 +27,11 @@ export class AddMember implements OnInit, OnDestroy {
   selectedPackageForPayment: any = null;
   paymentAmount: string = '';
   selectedPtToDelete: any = null;
+  pauseTarget: any = null;
+  pauseKind: PauseKind = 'package';
+  pauseError = '';
+  savingPause = false;
+  pauseForm = { fromDate: '', toDate: '', remarks: '' };
 
   minDate: any = null;
   maxDate: any = null;
@@ -103,6 +109,25 @@ export class AddMember implements OnInit, OnDestroy {
     if (this.sharedService.checkIfValueIsEmpty(dateValue)) return '';
     const date = new Date(dateValue);
     return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
+
+  formatCalendarDate(dateValue: string | null | undefined): string {
+    if (!dateValue) return '—';
+    const datePrefix = dateValue.match(/^\d{4}-\d{2}-\d{2}/)?.[0];
+    return datePrefix || this.datePipe.transform(dateValue, 'yyyy-MM-dd') || '—';
+  }
+
+  formatDateInput(dateValue: string | null | undefined): string {
+    return dateValue ? this.formatCalendarDate(dateValue) : '';
+  }
+
+  pauseStatusLabel(status: MemberPeriodStatus | undefined): string {
+    switch (status) {
+      case 'active': return 'Active';
+      case 'inactive': return 'Inactive';
+      case 'inactive_due_to_pause': return 'Inactive due to pause';
+      default: return 'Unknown';
+    }
   }
 
   populateMemberDetailsFromResponse() {
@@ -964,6 +989,97 @@ export class AddMember implements OnInit, OnDestroy {
         this.loaderService.show.set(false);
       },
     );
+  }
+
+  openPauseDialog(kind: PauseKind, target: any) {
+    this.pauseKind = kind;
+    this.pauseTarget = target;
+    this.pauseError = '';
+    this.pauseForm = { fromDate: '', toDate: '', remarks: '' };
+    this.pauseModal.nativeElement.showModal();
+  }
+
+  closePauseDialog() {
+    if (!this.savingPause) {
+      this.pauseModal.nativeElement.close();
+      this.pauseTarget = null;
+      this.pauseError = '';
+    }
+  }
+
+  private isValidPauseDate(value: string): boolean {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+    const date = new Date(`${value}T00:00:00Z`);
+    return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
+  }
+
+  savePause() {
+    const target = this.pauseTarget;
+    const fromDate = this.pauseForm.fromDate;
+    const toDate = this.pauseForm.toDate;
+    const remarks = this.pauseForm.remarks.trim();
+
+    if (!target || !target.endDate) {
+      this.pauseError = 'This record needs an end date before it can be paused.';
+      return;
+    }
+    if (!fromDate || !toDate || !remarks) {
+      this.pauseError = 'From date, to date, and remarks are required.';
+      return;
+    }
+    if (!this.isValidPauseDate(fromDate) || !this.isValidPauseDate(toDate)) {
+      this.pauseError = 'Enter valid pause dates.';
+      return;
+    }
+    if (fromDate > toDate) {
+      this.pauseError = 'From date must be on or before the to date.';
+      return;
+    }
+    const endDate = this.formatCalendarDate(target.endDate);
+    if (!this.isValidPauseDate(endDate)) {
+      this.pauseError = 'This record has an invalid end date and cannot be paused.';
+      return;
+    }
+    if (fromDate > endDate || toDate > endDate) {
+      this.pauseError = 'Pause dates must be on or before the record end date.';
+      return;
+    }
+    const startDate = target.startDate ? this.formatCalendarDate(target.startDate) : '';
+    if (startDate && (!this.isValidPauseDate(startDate) || fromDate < startDate)) {
+      this.pauseError = 'Pause dates must be on or after the record start date.';
+      return;
+    }
+
+    this.pauseError = '';
+    this.savingPause = true;
+    this.appService.pauseMemberDetail(this.pauseKind, {
+      uniqueId: target._id,
+      fromDate,
+      toDate,
+      remarks,
+    }).subscribe({
+      next: (response) => {
+        const updated = response.data;
+        if (this.pauseKind === 'package') {
+          this.memberDetails.memberPackageDetails = this.memberDetails.memberPackageDetails.map(
+            (row: any) => row._id === updated._id ? { ...row, ...updated } : row,
+          );
+        } else {
+          this.memberDetails.memberTrainerDetails = this.memberDetails.memberTrainerDetails.map(
+            (row: any) => row._id === updated._id ? { ...row, ...updated } : row,
+          );
+        }
+        this.savingPause = false;
+        this.pauseModal.nativeElement.close();
+        this.pauseTarget = null;
+        this.cdr.detectChanges();
+        this.sharedService.snackBar.open(response.message || 'Pause period saved successfully.', 'Close', { duration: 3000 });
+      },
+      error: (error: HttpErrorResponse) => {
+        this.pauseError = error.error?.message ?? 'Could not save the pause period.';
+        this.savingPause = false;
+      },
+    });
   }
 
   deletePackage(pkg: any) {
